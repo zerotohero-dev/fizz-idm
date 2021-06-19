@@ -11,12 +11,19 @@
 
 package main
 
+import (
+	"github.com/gorilla/mux"
+	"github.com/zerotohero-dev/fizz-app/pkg/app"
+	"github.com/zerotohero-dev/fizz-env/pkg/env"
+	"github.com/zerotohero-dev/fizz-idm/internal/api"
+)
+
 const appName = "fizz-idm"
 
 func main() {
 	e := *env.New()
 
-	appEnv = e.Idm
+	appEnv := e.Idm
 
 	app.Configure(e, appName, appEnv.HoneybadgerApiKey, appEnv.Sanitize)
 
