@@ -18,12 +18,12 @@ import (
 )
 
 type Service interface {
-	SignUp(user data.User) error
-	LogIn(email, password string) (data.LoginResult, error)
-	VerifyEmailVerificationToken(email, emailVerificationToken string) (data.User, error)
 	Info(authToken string) (data.Info, error)
+	LogIn(email, password string) (data.LoginResult, error)
+	SignUp(user data.User) error
+	VerifyEmailVerificationToken(email, emailVerificationToken string) (data.User, error)
 	SendPasswordResetToken(email string) error
-	ResetUserPassword(email, password, passwordResetToken string) error
+	ResetPassword(email, password, passwordResetToken string) error
 }
 
 type service struct {

@@ -9,12 +9,14 @@
  *  (& )`   (,((,((;( ))\,
  */
 
-package service
+package transport
 
-func (s service) SendPasswordResetToken(email string) error {
-	panic("implement me")
-}
+import (
+	"context"
+	"net/http"
+)
 
-func (s service) ResetPassword(email, password, passwordResetToken string) error {
-	panic("implement me")
+func DecodeLoginRequest(_ context.Context, r *http.Request) (interface{}, error) {
+	panic("Implement me!")
+	return nil, nil
 }
