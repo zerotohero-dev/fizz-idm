@@ -59,7 +59,8 @@ func InitializeEndpoints(e env.FizzEnv, router *mux.Router) {
 	app.Route(
 		router, http.NewServer(
 			endpoint.MakeVerifyEmailVerificationTokenEndpoint(svc),
-			app.ContentTypeValidatingMiddleware(transport.DecodeVerifyEmailVerificationTokenRequest),
+			app.ContentTypeValidatingMiddleware(
+				transport.DecodeVerifyEmailVerificationTokenRequest),
 			app.EncodeResponse,
 		),
 		"POST", "/v1/verify",
@@ -69,7 +70,8 @@ func InitializeEndpoints(e env.FizzEnv, router *mux.Router) {
 	app.Route(
 		router, http.NewServer(
 			endpoint.MakeSendPasswordResetTokenEndpoint(svc),
-			app.ContentTypeValidatingMiddleware(transport.DecodeSendPasswordResetTokenRequest),
+			app.ContentTypeValidatingMiddleware(
+				transport.DecodeSendPasswordResetTokenRequest),
 			app.EncodeResponse,
 		),
 		"POST", "/v1/remind",
@@ -79,7 +81,8 @@ func InitializeEndpoints(e env.FizzEnv, router *mux.Router) {
 	app.Route(
 		router, http.NewServer(
 			endpoint.MakeResetPasswordEndpoint(svc),
-			app.ContentTypeValidatingMiddleware(transport.DecodeResetPasswordRequest),
+			app.ContentTypeValidatingMiddleware(
+				transport.DecodeResetPasswordRequest),
 			app.EncodeResponse,
 		),
 		"POST", "/v1/reset",
