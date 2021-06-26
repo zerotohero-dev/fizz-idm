@@ -87,4 +87,15 @@ func InitializeEndpoints(e env.FizzEnv, router *mux.Router) {
 		),
 		"POST", "/v1/reset",
 	)
+
+	// Adds user to waitlist.
+	app.Route(
+		router, http.NewServer(
+			endpoint.MakeResetPasswordEndpoint(svc),
+			app.ContentTypeValidatingMiddleware(
+				transport.DecodeWaitlistRequest),
+			app.EncodeResponse,
+		),
+		"POST", "/v1/waitlist",
+	)
 }
