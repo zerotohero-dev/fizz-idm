@@ -14,7 +14,7 @@ func CreateUnverifiedUser(u entity.User) error {
 	u.Status = entity.Status.Unverified
 	u.Token.EmailVerificationToken = ""
 
-	now := (time.Now().UnixNano()) / 1000000
+	now := time.Now()
 	u.RecordCreated = now
 	u.RecordUpdated = now
 	u.Password = ""

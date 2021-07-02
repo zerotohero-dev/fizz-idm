@@ -21,6 +21,7 @@ import (
 	"github.com/zerotohero-dev/fizz-validation/pkg/sanitization"
 	"time"
 )
+
 const defaultName = "FizzBuzz Pro"
 
 func MakeSignupEndpoint(svc service.Service) endpoint.Endpoint {
@@ -39,7 +40,7 @@ func MakeSignupEndpoint(svc service.Service) endpoint.Endpoint {
 			}, nil
 		}
 
-		req.Name =  sanitization.SanitizeName(req.Name)
+		req.Name = sanitization.SanitizeName(req.Name)
 		req.Email = sanitization.SanitizeEmail(req.Email)
 
 		if req.Name == "" {
@@ -52,9 +53,9 @@ func MakeSignupEndpoint(svc service.Service) endpoint.Endpoint {
 			}, nil
 		}
 
-		now := (time.Now().UnixNano()) / 1000000
+		now := time.Now()
 		err := svc.SignUp(data.User{
-			Info:                    data.Info{
+			Info: data.Info{
 				Email: req.Email,
 				Name:  req.Name,
 			},
@@ -64,7 +65,6 @@ func MakeSignupEndpoint(svc service.Service) endpoint.Endpoint {
 			RecordCreated:           now,
 			RecordUpdated:           now,
 		})
-
 
 		if err != nil {
 			log.Err("signUpEndpoint: %s", err.Error())
