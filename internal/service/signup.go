@@ -68,7 +68,8 @@ func setAccountActivationToken(email string, emailVerificationToken string) erro
 		// context.Background() because we do not want this to cancel prematurely.
 		// go-kit cancels the owner context as soon as the function exits.
 		res, err := downstream.Endpoints().MailerVerification(
-			context.Background(), reqres.EmailVerificationRequest{
+
+			context.Background(), reqres.RelaySendEmailVerificationMessageRequest{
 				Email: email,
 				Name:  u.Name,
 				Token: emailVerificationToken,
@@ -78,7 +79,7 @@ func setAccountActivationToken(email string, emailVerificationToken string) erro
 			log.Err("Problem sending activation email (%s) (%s)", log.RedactEmail(email), err.Error())
 		}
 
-		er := res.(reqres.EmailVerificationResponse)
+		er := res.(reqres.RelaySendEmailVerificationMessageRequest)
 		if er.Err != "" {
 			log.Err("Problem sending activation email (%s) (%s)", log.RedactEmail(email), er.Err)
 		}

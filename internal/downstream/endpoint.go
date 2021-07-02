@@ -102,10 +102,10 @@ func makeMailerEndpoint(en env.FizzEnv, path string) endpoint.Endpoint {
 	switch path {
 	case "/v1/send/welcome":
 		return http.NewClient("POST", u, encodeRequest,
-			decodeRelayWelcomeEmailResponse).Endpoint()
+			decodeRelayWelcomeMessageResponse).Endpoint()
 	case "/v1/send/verification":
 		return http.NewClient("POST", u, encodeRequest,
-			decodeRelayEmailVerificationEmailResponse).Endpoint()
+			decodeRelaySendEmailVerificationMessageResponse).Endpoint()
 	case "/v1/send/verified":
 		return http.NewClient("POST", u, encodeRequest,
 			decodeRelayEmailVerifiedEmailResponse).Endpoint()

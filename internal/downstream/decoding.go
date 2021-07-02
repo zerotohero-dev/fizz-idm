@@ -9,16 +9,16 @@ import (
 	"net/http"
 )
 
-func decodeRelayWelcomeEmailResponse(_ context.Context, r *http.Response) (interface{}, error) {
-	var response reqres.RelayWelcomeEmailResponse
+func decodeRelayWelcomeMessageResponse(_ context.Context, r *http.Response) (interface{}, error) {
+	var response reqres.RelayWelcomeMessageResponse
 	if err := json.NewDecoder(r.Body).Decode(&response); err != nil {
 		return nil, err
 	}
 	return response, nil
 }
 
-func decodeRelayEmailVerificationEmailResponse(_ context.Context, r *http.Response) (interface{}, error) {
-	var response reqres.RelayEmailVerifiedEmailResponse
+func decodeRelaySendEmailVerificationMessageResponse(_ context.Context, r *http.Response) (interface{}, error) {
+	var response reqres.RelaySendEmailVerificationMessageResponse
 	if err := json.NewDecoder(r.Body).Decode(&response); err != nil {
 		return nil, err
 	}
@@ -26,7 +26,7 @@ func decodeRelayEmailVerificationEmailResponse(_ context.Context, r *http.Respon
 }
 
 func decodeRelayEmailVerifiedEmailResponse(_ context.Context, r *http.Response) (interface{}, error) {
-	var response reqres.RelayEmailVerifiedEmailResponse
+	var response reqres.RelayEmailVerifiedMessageResponse
 	if err := json.NewDecoder(r.Body).Decode(&response); err != nil {
 		return nil, err
 	}
