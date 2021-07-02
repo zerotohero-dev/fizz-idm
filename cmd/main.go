@@ -16,6 +16,8 @@ import (
 	"github.com/zerotohero-dev/fizz-app/pkg/app"
 	"github.com/zerotohero-dev/fizz-env/pkg/env"
 	"github.com/zerotohero-dev/fizz-idm/internal/api"
+	"github.com/zerotohero-dev/fizz-idm/internal/data"
+	"github.com/zerotohero-dev/fizz-idm/internal/downstream"
 )
 
 const appName = "fizz-idm"
@@ -25,7 +27,12 @@ func main() {
 
 	appEnv := e.Idm
 
+	// Configure the environment:
 	app.Configure(e, appName, appEnv.HoneybadgerApiKey, appEnv.Sanitize)
+	// Connect to the database:
+	data.Init(e)
+	// Initialize downstream services:
+	downstream.Init(e)
 
 	r := mux.NewRouter()
 	api.InitializeEndpoints(e, r)
