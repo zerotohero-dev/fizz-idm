@@ -58,12 +58,12 @@ func InitializeEndpoints(e env.FizzEnv, router *mux.Router) {
 	// Sends an email verification email to the user.
 	app.Route(
 		router, http.NewServer(
-			endpoint.MakeVerifyEmailVerificationTokenEndpoint(svc),
+			endpoint.MakeCreateAccountEndpoint(svc),
 			app.ContentTypeValidatingMiddleware(
-				transport.DecodeVerifyEmailVerificationTokenRequest),
+				transport.DecodeCreateAccountRequest),
 			app.EncodeResponse,
 		),
-		"POST", "/v1/verify",
+		"POST", "/v1/create",
 	)
 
 	// Sends a “reset password” email to the user.
