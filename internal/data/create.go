@@ -12,7 +12,6 @@ import (
 // It does not alter the input user `u`, and it passes it to the DB as is.
 func CreateUnverifiedUser(u entity.User) error {
 	u.Status = entity.Status.Unverified
-	u.Token.EmailVerificationToken = ""
 
 	now := time.Now()
 	u.RecordCreated = now

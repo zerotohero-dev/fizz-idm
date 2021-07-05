@@ -20,6 +20,32 @@ import (
 	"net/url"
 )
 
+var urls = struct {
+	CryptoTokenCreate  string
+	CryptoHashCreate   string
+	CryptoHashVerify   string
+	CryptoJwtCreate    string
+	CryptoJwtVerify    string
+	MailerWelcome      string
+	MailerVerification string
+	MailerVerified     string
+	MailerReset        string
+	MailerConfirm      string
+	MailerSubscribed   string
+}{
+	CryptoTokenCreate:  "/v1/token",
+	CryptoHashCreate:   "/v1/hash",
+	CryptoHashVerify:   "/v1/hash/verify",
+	CryptoJwtCreate:    "/v1/jwt",
+	CryptoJwtVerify:    "/v1/jwt/verify",
+	MailerWelcome:      "/v1/relay/welcome",
+	MailerVerification: "/v1/relay/verification",
+	MailerVerified:     "/v1/relay/verified",
+	MailerReset:        "/v1/relay/reset",
+	MailerConfirm:      "/v1/relay/confirm",
+	MailerSubscribed:   "/v1/relay/subscribed",
+}
+
 type downstream struct {
 	CryptoTokenCreate  endpoint.Endpoint
 	CryptoHashCreate   endpoint.Endpoint
@@ -69,21 +95,21 @@ func makeCryptoEndpoint(en env.FizzEnv, path string) endpoint.Endpoint {
 	}
 
 	switch path {
-	case "/v1/token/create":
+	case urls.CryptoTokenCreate:
 		return http.NewClient(
-			"POST", u, encodeRequest, decodeTokenCreateResponse).Endpoint()
-	case "/v1/hash/create":
+			"GET", u, encodeRequest, decodeTokenCreateResponse).Endpoint()
+	case urls.CryptoHashCreate:
 		return http.NewClient(
 			"POST", u, encodeRequest, decodeHashCreateResponse).Endpoint()
-	case "/v1/jwt/sign":
-		return http.NewClient(
-			"POST", u, encodeRequest, decodeJwtCreateResponse).Endpoint()
-	case "/v1/jwt/verify":
-		return http.NewClient(
-			"POST", u, encodeRequest, decodeJwtVerifyResponse).Endpoint()
-	case "/v1/hash/verify":
+	case urls.CryptoHashVerify:
 		return http.NewClient(
 			"POST", u, encodeRequest, decodeHashVerifyResponse).Endpoint()
+	case urls.CryptoJwtCreate:
+		return http.NewClient(
+			"POST", u, encodeRequest, decodeJwtCreateResponse).Endpoint()
+	case urls.CryptoJwtVerify:
+		return http.NewClient(
+			"POST", u, encodeRequest, decodeJwtVerifyResponse).Endpoint()
 	default:
 		log.Warning("makeCryptoEndpoint: Unknown path '%s'", path)
 		return nil
@@ -100,15 +126,21 @@ func makeMailerEndpoint(en env.FizzEnv, path string) endpoint.Endpoint {
 	}
 
 	switch path {
-	case "/v1/send/welcome":
+	case urls.MailerWelcome:
 		return http.NewClient("POST", u, encodeRequest,
 			decodeRelayWelcomeMessageResponse).Endpoint()
-	case "/v1/send/verification":
+	case urls.MailerVerification:
 		return http.NewClient("POST", u, encodeRequest,
 			decodeRelaySendEmailVerificationMessageResponse).Endpoint()
-	case "/v1/send/verified":
+	case urls.MailerVerified:
 		return http.NewClient("POST", u, encodeRequest,
 			decodeRelayEmailVerifiedEmailResponse).Endpoint()
+	case urls.MailerReset:
+		panic("Implement me")
+	case urls.MailerConfirm:
+		panic("Implement me")
+	case urls.MailerSubscribed:
+		panic("Implement me")
 	default:
 		log.Warning("makeCryptoEndpoint: Unknown path '%s'", path)
 		return nil
@@ -125,13 +157,14 @@ func Init(en env.FizzEnv) {
 	}
 
 	e = &downstream{
-		CryptoTokenCreate:  makeCryptoEndpoint(en, "/v1/token/create"),
-		CryptoHashCreate:   makeCryptoEndpoint(en, "/v1/hash/create"),
-		CryptoHashVerify:   makeCryptoEndpoint(en, "/v1/hash/verify"),
-		CryptoJwtCreate:    makeCryptoEndpoint(en, "/v1/jwt/create"),
-		CryptoJwtVerify:    makeCryptoEndpoint(en, "/v1/jwt/verify"),
-		MailerWelcome:      makeMailerEndpoint(en, "/v1/send/welcome"),
-		MailerVerification: makeMailerEndpoint(en, "/v1/send/verification"),
-		MailerVerified:     makeMailerEndpoint(en, "/v1/send/verified"),
+		CryptoTokenCreate:  makeCryptoEndpoint(en, urls.CryptoTokenCreate),
+		CryptoHashCreate:   makeCryptoEndpoint(en, urls.CryptoHashCreate),
+		CryptoHashVerify:   makeCryptoEndpoint(en, urls.CryptoHashVerify),
+		CryptoJwtCreate:    makeCryptoEndpoint(en, urls.CryptoJwtCreate),
+		CryptoJwtVerify:    makeCryptoEndpoint(en, urls.CryptoJwtVerify),
+		MailerWelcome:      makeMailerEndpoint(en, urls.MailerWelcome),
+		MailerVerification: makeMailerEndpoint(en, urls.MailerVerification),
+		MailerVerified:     makeMailerEndpoint(en, urls.MailerVerified),
+		// TODO: there are endpoints to implement, you’ll probably need them too.
 	}
 }

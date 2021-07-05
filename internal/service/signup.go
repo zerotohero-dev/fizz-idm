@@ -41,37 +41,15 @@ func createUnverifiedUser(user entity.User) error {
 	return data.CreateUnverifiedUser(user)
 }
 
-func setAccountActivationToken(email string, emailVerificationToken string) error {
-	u, err := data.UnverifiedUserByEmail(email)
-	if err != nil {
-		return errors.Wrap(
-			err,
-			fmt.Sprintf("setAccountActivationToken: error checking the existence of the user (%s)", email),
-		)
-	}
-
-	if u == nil {
-		return errors.New(
-			fmt.Sprintf("setAccountActivationToken: cannot find user to set token (%s)", email),
-		)
-	}
-
-	err = data.UpdateUnverifiedUserEmailVerificationToken(u.Email, emailVerificationToken)
-	if err != nil {
-		return errors.Wrap(
-			err,
-			fmt.Sprintf("SetTokenAndPassword: error updating the token (%s)", email),
-		)
-	}
-
+func sendEmailVerificationToken(name, email string, emailVerificationToken string) {
 	go func() {
 		// context.Background() because we do not want this to cancel prematurely.
 		// go-kit cancels the owner context as soon as the function exits.
 		res, err := downstream.Endpoints().MailerVerification(
 
-			context.Background(), reqres.RelaySendEmailVerificationMessageRequest{
+			context.Background(), reqres.RelayEmailVerificationMessageRequest{
 				Email: email,
-				Name:  u.Name,
+				Name:  name,
 				Token: emailVerificationToken,
 			})
 
@@ -79,24 +57,14 @@ func setAccountActivationToken(email string, emailVerificationToken string) erro
 			log.Err("Problem sending activation email (%s) (%s)", log.RedactEmail(email), err.Error())
 		}
 
-		er := res.(reqres.RelaySendEmailVerificationMessageRequest)
+		er := res.(reqres.RelayEmailVerificationMessageResponse)
 		if er.Err != "" {
 			log.Err("Problem sending activation email (%s) (%s)", log.RedactEmail(email), er.Err)
 		}
 	}()
-
-	return nil
 }
 
 func (s service) SignUp(user entity.User) error {
-	err := createUnverifiedUser(user)
-	if err != nil {
-		return errors.Wrap(
-			err,
-			fmt.Sprintf("SignUp: error creating user (%s)", user.Email),
-		)
-	}
-
 	res, err := downstream.Endpoints().CryptoTokenCreate(s.ctx, reqres.TokenCreateRequest{})
 	if err != nil {
 		return errors.Wrap(
@@ -118,13 +86,23 @@ func (s service) SignUp(user entity.User) error {
 		)
 	}
 
-	err = setAccountActivationToken(user.Email, tr.Token)
+	if tr.Token == "" {
+		return errors.New(
+			fmt.Sprintf("SignUp: error creating account activation token (%s)", user.Email),
+		)
+	}
+
+	user.EmailVerificationToken = tr.Token
+
+	err = createUnverifiedUser(user)
 	if err != nil {
 		return errors.Wrap(
 			err,
-			fmt.Sprintf("SignUp: error setting account activation token (%s)", user.Email),
+			fmt.Sprintf("SignUp: error creating user (%s)", user.Email),
 		)
 	}
+
+	sendEmailVerificationToken(user.Name, user.Email, tr.Token)
 
 	return nil
 }

@@ -18,7 +18,7 @@ import (
 )
 
 type Service interface {
-	Info(authToken string) (data.Info, error)
+	Info(authToken string) (data.User, error)
 	LogIn(email, password string) (data.LoginResult, error)
 	SignUp(user data.User) error
 	VerifyEmailVerificationToken(email, emailVerificationToken string) (data.User, error)

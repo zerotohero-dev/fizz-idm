@@ -18,7 +18,7 @@ func decodeRelayWelcomeMessageResponse(_ context.Context, r *http.Response) (int
 }
 
 func decodeRelaySendEmailVerificationMessageResponse(_ context.Context, r *http.Response) (interface{}, error) {
-	var response reqres.RelaySendEmailVerificationMessageResponse
+	var response reqres.RelayEmailVerificationMessageResponse
 	if err := json.NewDecoder(r.Body).Decode(&response); err != nil {
 		return nil, err
 	}
@@ -75,6 +75,9 @@ func decodeHashVerifyResponse(_ context.Context, r *http.Response) (interface{},
 
 func encodeRequest(_ context.Context, r *http.Request, request interface{}) error {
 	var buf bytes.Buffer
+
+	r.Header.Add("Content-Type", "application/json")
+
 	if err := json.NewEncoder(&buf).Encode(request); err != nil {
 		return err
 	}

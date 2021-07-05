@@ -55,10 +55,8 @@ func MakeSignupEndpoint(svc service.Service) endpoint.Endpoint {
 
 		now := time.Now()
 		err := svc.SignUp(data.User{
-			Info: data.Info{
-				Email: req.Email,
-				Name:  req.Name,
-			},
+			Email:                   req.Email,
+			Name:                    req.Name,
 			Password:                "",
 			Status:                  "",
 			SubscribedToMailingList: false,

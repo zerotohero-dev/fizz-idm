@@ -11,9 +11,8 @@
 
 package service
 
-
 import "github.com/zerotohero-dev/fizz-entity/pkg/data"
 
-func (s service) Info(authToken string) (data.Info, error) {
+func (s service) Info(authToken string) (data.User, error) {
 	panic("implement me")
 }
