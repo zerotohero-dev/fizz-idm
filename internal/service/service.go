@@ -11,8 +11,19 @@
 
 package service
 
+/*
+	Things to do:
+	  1. IDM is not building for some reason: Fix it.
+	  2. Containerize mailer µService.
+	  3. Docker and k8s consume CPU… I need CPU for the streams.
+	     and since I cannot buy a beefier machine for now, I’ll
+		 use k8s as a service for now.
+	  0. I need to test this new setup too.
+*/
+
 import (
 	"context"
+
 	"github.com/zerotohero-dev/fizz-entity/pkg/data"
 	"github.com/zerotohero-dev/fizz-env/pkg/env"
 )
@@ -21,7 +32,7 @@ type Service interface {
 	Info(authToken string) (data.User, error)
 	LogIn(email, password string) (data.LoginResult, error)
 	SignUp(user data.User) error
-	CreateAccount(email, emailVerificationToken string) (data.User, error)
+	CreateAccount(user data.User) (*data.User, error)
 	SendPasswordResetToken(email string) error
 	ResetPassword(email, password, passwordResetToken string) error
 }

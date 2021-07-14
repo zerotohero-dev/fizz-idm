@@ -13,6 +13,7 @@ package endpoint
 
 import (
 	"context"
+
 	"github.com/go-kit/kit/endpoint"
 	entity "github.com/zerotohero-dev/fizz-entity/pkg/data"
 	"github.com/zerotohero-dev/fizz-entity/pkg/reqres"
@@ -53,12 +54,27 @@ func MakeCreateAccountEndpoint(svc service.Service) endpoint.Endpoint {
 			}, nil
 		}
 
-		err := svc.SignUp(entity.User{
+		user, err := svc.CreateAccount(entity.User{
 			Name:                    req.Name,
 			Email:                   req.Email,
 			Password:                req.Password,
 			SubscribedToMailingList: req.SubscribeToMailingList,
 		})
+
+		if user == nil {
+			if err != nil {
+				log.Err(
+					"MakeCreateAccountEndpoint: Error creating account: %s",
+					err.Error(),
+				)
+			} else {
+				log.Err("MakeCreateAccountEndpoint: Error creating account")
+			}
+
+			return reqres.CreateAccountResponse{
+				Err: "MakeCreateAccountEndpoint: cannot sign up user",
+			}, nil
+		}
 
 		if err != nil {
 			log.Err("MakeCreateAccountEndpoint: %s", err.Error())
