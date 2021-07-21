@@ -22,69 +22,71 @@ import (
 	"github.com/zerotohero-dev/fizz-idm/internal/transport"
 )
 
+const prefix = "/idm"
+
 func InitializeEndpoints(e env.FizzEnv, router *mux.Router) {
 	svc := service.New(e, context.Background())
 
 	// Gets user info for the logged-in user.
-	app.Route(
-		router, http.NewServer(
+	app.RoutePrefixedPath(
+		http.NewServer(
 			endpoint.MakeInfoEndpoint(svc),
 			app.ContentTypeValidatingMiddleware(transport.DecodeInfoRequest),
 			app.EncodeResponse,
 		),
-		"GET", "/v1/info",
+		router, "GET", prefix, "/v1/info",
 	)
 
 	// Authenticates the user.
-	app.Route(
-		router, http.NewServer(
+	app.RoutePrefixedPath(
+		http.NewServer(
 			endpoint.MakeLoginEndpoint(svc),
 			app.ContentTypeValidatingMiddleware(transport.DecodeLoginRequest),
 			app.EncodeResponse,
 		),
-		"POST", "/v1/login",
+		router, "POST", prefix, "/v1/login",
 	)
 
 	// Registers the user.
-	app.Route(
-		router, http.NewServer(
+	app.RoutePrefixedPath(
+		http.NewServer(
 			endpoint.MakeSignupEndpoint(svc),
 			app.ContentTypeValidatingMiddleware(transport.DecodeSignupRequest),
 			app.EncodeResponse,
 		),
-		"POST", "/v1/signup",
+		router, "POST", prefix, "/v1/signup",
 	)
 
 	// Sends an email verification email to the user.
-	app.Route(
-		router, http.NewServer(
+	app.RoutePrefixedPath(
+		http.NewServer(
 			endpoint.MakeCreateAccountEndpoint(svc),
 			app.ContentTypeValidatingMiddleware(
 				transport.DecodeCreateAccountRequest),
 			app.EncodeResponse,
 		),
-		"POST", "/v1/create",
+		router, "POST", prefix, "/v1/create",
 	)
 
 	// Sends a “reset password” email to the user.
-	app.Route(
-		router, http.NewServer(
+	app.RoutePrefixedPath(
+		http.NewServer(
 			endpoint.MakeSendPasswordResetTokenEndpoint(svc),
 			app.ContentTypeValidatingMiddleware(
 				transport.DecodeSendPasswordResetTokenRequest),
 			app.EncodeResponse,
 		),
-		"POST", "/v1/remind",
+		router, "POST", prefix, "/v1/remind",
 	)
 
 	// Resets the user’s password if the token matches.
-	app.Route(
-		router, http.NewServer(
+	app.RoutePrefixedPath(
+		http.NewServer(
 			endpoint.MakeResetPasswordEndpoint(svc),
 			app.ContentTypeValidatingMiddleware(
 				transport.DecodeResetPasswordRequest),
 			app.EncodeResponse,
 		),
-		"POST", "/v1/reset",
+		router, "POST", prefix, "/v1/reset",
 	)
 }
