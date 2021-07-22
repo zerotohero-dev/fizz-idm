@@ -22,10 +22,10 @@ import (
 	"github.com/zerotohero-dev/fizz-idm/internal/transport"
 )
 
-const prefix = "/idm"
-
 func InitializeEndpoints(e env.FizzEnv, router *mux.Router) {
 	svc := service.New(e, context.Background())
+
+	prefix := e.Idm.PathPrefix
 
 	// Gets user info for the logged-in user.
 	app.RoutePrefixedPath(
