@@ -36,7 +36,7 @@ func main() {
 
 	r := mux.NewRouter()
 	api.InitializeEndpoints(e, r)
-	app.RouteHealthEndpoints(r)
+	app.RouteHealthEndpoints(e.Idm.PathPrefix, r)
 
 	app.ListenAndServe(e, appName, appEnv.Port, r)
 }

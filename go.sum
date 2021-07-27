@@ -440,6 +440,8 @@ github.com/zerotohero-dev/fizz-app v0.2.1 h1:ZGd9+i9xcSiVhB+7c7jS4RJ9CXjrrF7ns0A
 github.com/zerotohero-dev/fizz-app v0.2.1/go.mod h1:fN7pQNNhJk89AB/lOTpoHG/9tnX67bfNWung5zT9FIw=
 github.com/zerotohero-dev/fizz-app v0.2.2 h1:pPoXZXdv4RGIIFpEF9M6JaWpUl/kKFIbMmjEbCZbShs=
 github.com/zerotohero-dev/fizz-app v0.2.2/go.mod h1:fN7pQNNhJk89AB/lOTpoHG/9tnX67bfNWung5zT9FIw=
+github.com/zerotohero-dev/fizz-app v0.4.0 h1:BtkMQCrIEj9kRPY+3voNtmRfQEVVhSxNADOE+nECKPM=
+github.com/zerotohero-dev/fizz-app v0.4.0/go.mod h1:fN7pQNNhJk89AB/lOTpoHG/9tnX67bfNWung5zT9FIw=
 github.com/zerotohero-dev/fizz-entity v0.1.0/go.mod h1:PPwQoZlPHz+lTCdppAk+EzEshjivO8JvZTwfqz1DOP4=
 github.com/zerotohero-dev/fizz-entity v0.1.2 h1:ZadXy7PcwnFJvgCo8ltm6TvrbxG8U+PKd84hiL6KfwY=
 github.com/zerotohero-dev/fizz-entity v0.1.2/go.mod h1:PPwQoZlPHz+lTCdppAk+EzEshjivO8JvZTwfqz1DOP4=
