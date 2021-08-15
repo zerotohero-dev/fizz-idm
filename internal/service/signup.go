@@ -65,7 +65,7 @@ func sendEmailVerificationToken(name, email string, emailVerificationToken strin
 }
 
 func (s service) SignUp(user entity.User) error {
-	res, err := downstream.Endpoints().CryptoTokenCreate(s.ctx, reqres.TokenCreateRequest{})
+	res, err := downstream.Endpoints().CryptoTokenCreate(s.Context(), reqres.TokenCreateRequest{})
 	if err != nil {
 		return errors.Wrap(
 			err,

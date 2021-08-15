@@ -3,7 +3,7 @@ module github.com/zerotohero-dev/fizz-idm
 go 1.16
 
 require (
-	github.com/StackExchange/wmi v1.2.0 // indirect
+	github.com/StackExchange/wmi v1.2.1 // indirect
 	github.com/aws/aws-sdk-go v1.40.5 // indirect
 	github.com/go-kit/kit v0.11.0
 	github.com/golang/snappy v0.0.4 // indirect
@@ -17,7 +17,7 @@ require (
 	github.com/shirou/gopsutil v3.21.6+incompatible // indirect
 	github.com/youmark/pkcs8 v0.0.0-20201027041543-1326539a0a0a // indirect
 	github.com/zerotohero-dev/fizz-app v0.4.0
-	github.com/zerotohero-dev/fizz-entity v0.5.2
+	github.com/zerotohero-dev/fizz-entity v0.5.3
 	github.com/zerotohero-dev/fizz-env v0.3.3
 	github.com/zerotohero-dev/fizz-logging v0.2.0
 	github.com/zerotohero-dev/fizz-validation v0.1.0

@@ -32,14 +32,19 @@ type Service interface {
 	Info(authToken string) (data.User, error)
 	LogIn(email, password string) (data.LoginResult, error)
 	SignUp(user data.User) error
-	CreateAccount(user data.User) (*data.User, error)
+	CreateAccount(user data.User) error
 	SendPasswordResetToken(email string) error
 	ResetPassword(email, password, passwordResetToken string) error
+	Context() context.Context
 }
 
 type service struct {
 	env env.FizzEnv
 	ctx context.Context
+}
+
+func (s service) Context() context.Context {
+	return s.ctx
 }
 
 func New(e env.FizzEnv, ctx context.Context) Service {

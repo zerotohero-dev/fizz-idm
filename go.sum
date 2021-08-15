@@ -8,6 +8,8 @@ github.com/StackExchange/wmi v0.0.0-20210224194228-fe8f1750fd46 h1:5sXbqlSomvdjl
 github.com/StackExchange/wmi v0.0.0-20210224194228-fe8f1750fd46/go.mod h1:3eOhrUMpNV+6aFIbp5/iudMxNCF27Vw2OZgy4xEx0Fg=
 github.com/StackExchange/wmi v1.2.0 h1:noJEYkMQVlFCEAc+2ma5YyRhlfjcWfZqk5sBRYozdyM=
 github.com/StackExchange/wmi v1.2.0/go.mod h1:3eOhrUMpNV+6aFIbp5/iudMxNCF27Vw2OZgy4xEx0Fg=
+github.com/StackExchange/wmi v1.2.1 h1:VIkavFPXSjcnS+O8yTq7NI32k0R5Aj+v39y29VYDOSA=
+github.com/StackExchange/wmi v1.2.1/go.mod h1:rcmrprowKIVzvc+NUiLncP2uuArMWLCbu9SBzvHz7e8=
 github.com/VividCortex/gohistogram v1.0.0/go.mod h1:Pf5mBqqDxYaXu3hDrrU+w6nw50o/4+TcAqDqk/vUH7g=
 github.com/afex/hystrix-go v0.0.0-20180502004556-fa1af6a1f4f5/go.mod h1:SkGFH1ia65gfNATL8TAiHDNxPzPdmEL5uirI2Uyuz6c=
 github.com/alecthomas/template v0.0.0-20160405071501-a0175ee3bccc/go.mod h1:LOuyumcjzFXgccqObfd/Ljyb9UuFJ6TxHnclSeseNhc=
@@ -483,6 +485,8 @@ github.com/zerotohero-dev/fizz-entity v0.5.1 h1:AhU5NcOqdDw5fdQSU6mvnsNnJr3XIUT6
 github.com/zerotohero-dev/fizz-entity v0.5.1/go.mod h1:n1vDpMX7HXLUOpzUkfJaWBkmbHb5wcszMriugFVqrjs=
 github.com/zerotohero-dev/fizz-entity v0.5.2 h1:qtZXpH/5ZjiHh9h8yzxKsCxfjXLNLTHwxDN6RHx5Qs0=
 github.com/zerotohero-dev/fizz-entity v0.5.2/go.mod h1:n1vDpMX7HXLUOpzUkfJaWBkmbHb5wcszMriugFVqrjs=
+github.com/zerotohero-dev/fizz-entity v0.5.3 h1:SyWcedoOuz0ZJ0H3geGOld/2ZGAn1Nry8MrllpI1110=
+github.com/zerotohero-dev/fizz-entity v0.5.3/go.mod h1:n1vDpMX7HXLUOpzUkfJaWBkmbHb5wcszMriugFVqrjs=
 github.com/zerotohero-dev/fizz-env v0.1.9/go.mod h1:FPXQfRJ46qdmUXBaeanHg1dgx/wK2vJEmH/dTRr10tk=
 github.com/zerotohero-dev/fizz-env v0.1.13/go.mod h1:FPXQfRJ46qdmUXBaeanHg1dgx/wK2vJEmH/dTRr10tk=
 github.com/zerotohero-dev/fizz-env v0.1.17 h1:HMR88VJYB0/nXeeeZRafWwqvoOI9F0Qx+1FmrRZq2Kg=

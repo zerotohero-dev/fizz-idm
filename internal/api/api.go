@@ -47,7 +47,7 @@ func InitializeEndpoints(e env.FizzEnv, router *mux.Router) {
 		router, "POST", prefix, "/v1/login",
 	)
 
-	// Registers the user.
+	// Sends and email verification email to the user.
 	app.RoutePrefixedPath(
 		http.NewServer(
 			endpoint.MakeSignupEndpoint(svc),
@@ -57,7 +57,7 @@ func InitializeEndpoints(e env.FizzEnv, router *mux.Router) {
 		router, "POST", prefix, "/v1/signup",
 	)
 
-	// Sends an email verification email to the user.
+	// Creates the user’s account (needs email verification token)
 	app.RoutePrefixedPath(
 		http.NewServer(
 			endpoint.MakeCreateAccountEndpoint(svc),

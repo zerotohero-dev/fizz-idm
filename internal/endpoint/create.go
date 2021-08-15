@@ -13,6 +13,7 @@ package endpoint
 
 import (
 	"context"
+	"github.com/zerotohero-dev/fizz-idm/internal/downstream"
 
 	"github.com/go-kit/kit/endpoint"
 	entity "github.com/zerotohero-dev/fizz-entity/pkg/data"
@@ -24,9 +25,9 @@ import (
 
 func MakeCreateAccountEndpoint(svc service.Service) endpoint.Endpoint {
 	return func(_ context.Context, request interface{}) (interface{}, error) {
-		gr, ok := request.(reqres.ContentTypeProblemRequest)
+		gr, contentTypeMismatch := request.(reqres.ContentTypeProblemRequest)
 
-		if ok {
+		if contentTypeMismatch {
 			return reqres.CreateAccountResponse{
 				Err: gr.Err,
 			}, nil
@@ -40,49 +41,92 @@ func MakeCreateAccountEndpoint(svc service.Service) endpoint.Endpoint {
 			}, nil
 		}
 
-		req.Name = sanitization.SanitizeName(req.Name)
-		req.Email = sanitization.SanitizeEmail(req.Email)
-		req.Password = sanitization.SanitizePassword(req.Password)
+		sanitizedName := sanitization.SanitizeName(req.Name)
+		sanitizedEmail := sanitization.SanitizeEmail(req.Email)
+		sanitizedPassword := sanitization.SanitizePassword(req.Password)
+		sanitizedToken := sanitization.SanitizeToken(req.Token)
 
-		if req.Name == "" {
-			req.Name = "FizzBuzz Pro"
+		if sanitizedName == "" {
+			sanitizedName = "FizzBuzz Pro" // TODO: to constants or config or somewhere.
 		}
 
-		if len(req.Password) < 6 {
+		if len(sanitizedPassword) < 6 { // TODO: to sanitization as a constant.
 			return reqres.CreateAccountResponse{
 				Err: "MakeCreateAccountEndpoint: password should be at least six characters",
 			}, nil
 		}
 
-		user, err := svc.CreateAccount(entity.User{
-			Name:                    req.Name,
-			Email:                   req.Email,
-			Password:                req.Password,
-			SubscribedToMailingList: req.SubscribeToMailingList,
-		})
-
-		if user == nil {
-			if err != nil {
-				log.Err(
-					"MakeCreateAccountEndpoint: Error creating account: %s",
-					err.Error(),
-				)
-			} else {
-				log.Err("MakeCreateAccountEndpoint: Error creating account")
-			}
-
-			return reqres.CreateAccountResponse{
-				Err: "MakeCreateAccountEndpoint: cannot sign up user",
-			}, nil
-		}
+		// Hashing the password.
+		res, err := downstream.Endpoints().CryptoHashCreate(
+			svc.Context(),
+			reqres.HashCreateRequest{
+				Value: sanitizedPassword,
+			},
+		)
 
 		if err != nil {
 			log.Err("MakeCreateAccountEndpoint: %s", err.Error())
 
 			return reqres.CreateAccountResponse{
-				Err: "MakeCreateAccountEndpoint: cannot sign up user",
+				Err: "MakeCreateAccountEndpoint: cannot create an account",
 			}, nil
 		}
+
+		cr := res.(reqres.HashCreateResponse)
+
+		if cr.Err != "" {
+			log.Err("MakeCreateAccountEndpoint: %s", cr.Err)
+
+			return reqres.CreateAccountResponse{
+				Err: "MakeCreateAccountEndpoint: cannot create an account",
+			}, nil
+		}
+
+		hashedPassword := cr.Hash
+
+		err = svc.CreateAccount(entity.User{
+			Name:                    sanitizedName,
+			Email:                   sanitizedEmail,
+			Password:                hashedPassword,
+			EmailVerificationToken:  sanitizedToken,
+			SubscribedToMailingList: req.SubscribeToMailingList,
+		})
+
+		if err != nil {
+			log.Err("MakeCreateAccountEndpoint: %s", err.Error())
+
+			return reqres.CreateAccountResponse{
+				Err: "MakeCreateAccountEndpoint: cannot create an account",
+			}, nil
+		}
+
+		// Send the email in a separate process.
+		go func() {
+			res, err := downstream.Endpoints().MailerWelcome(
+				// Using a separate context because this needs to stay alive
+				// even after the create account API request finishes.
+				context.Background(), reqres.RelayWelcomeMessageRequest{
+					Email: req.Email,
+					Name:  req.Name,
+				})
+
+			if err != nil {
+				log.Err(
+					"Problem sending welcome email (%s) (%s)",
+					log.RedactEmail(req.Email), err.Error(),
+				)
+
+				return
+			}
+
+			er := res.(reqres.RelayWelcomeMessageResponse)
+			if er.Err != "" {
+				log.Err(
+					"Problem sending welcome email (%s) (%s)",
+					log.RedactEmail(req.Email), er.Err,
+				)
+			}
+		}()
 
 		return reqres.CreateAccountResponse{}, nil
 	}

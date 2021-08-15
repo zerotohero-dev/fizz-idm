@@ -29,19 +29,43 @@ func findUserByEmail(ctx context.Context, email string) (*mongo.Cursor, error) {
 	return users().Find(ctx, bson.D{{entity.Keys.Email, email}})
 }
 
-func userCursorByStatus(ctx context.Context, email, status string) (*mongo.Cursor, error) {
+func userCursorByStatus(
+	ctx context.Context, email, status string,
+) (*mongo.Cursor, error) {
 	return users().Find(ctx, bson.D{
 		{entity.Keys.Email, email},
 		{entity.Keys.Status, status},
 	})
 }
 
-func findUnverifiedUserByEmail(ctx context.Context, email string) (*mongo.Cursor, error) {
+func userCursorByStatusAndEmailVerificationToken(
+	ctx context.Context, email, status, token string,
+) (*mongo.Cursor, error) {
+	return users().Find(ctx, bson.D{
+		{entity.Keys.Email, email},
+		{entity.Keys.Status, status},
+		{entity.Keys.EmailVerificationToken, token},
+	})
+}
+
+func findUnverifiedUserByEmail(
+	ctx context.Context, email string,
+) (*mongo.Cursor, error) {
 	return userCursorByStatus(ctx, email, entity.Status.Unverified)
 }
 
-func findVerifiedUserByEmail(ctx context.Context, email string) (*mongo.Cursor, error) {
+func findVerifiedUserByEmail(
+	ctx context.Context, email string,
+) (*mongo.Cursor, error) {
 	return userCursorByStatus(ctx, email, entity.Status.Verified)
+}
+
+func findUnverifiedUserByEmailAndEmailVerificationToken(
+	ctx context.Context, email, token string,
+) (*mongo.Cursor, error) {
+	return userCursorByStatusAndEmailVerificationToken(
+		ctx, email, entity.Status.Unverified, token,
+	)
 }
 
 func UserExists(email string) (bool, error) {
@@ -60,6 +84,32 @@ func UserExists(email string) (bool, error) {
 	}
 
 	return false, nil
+}
+
+func UnverifiedUserByEmailAndEmailVerificationToken(email, token string) (*entity.User, error) {
+	ctx, _ := connection.CreateDbContext()
+	cur, err := findUnverifiedUserByEmailAndEmailVerificationToken(ctx, email, token)
+	defer func() {
+		_ = connection.CloseCursor(cur, ctx)
+	}()
+
+	if err != nil {
+		return nil, errors.Wrap(err, "UnverifiedUserByEmailAndEmailVerificationToken: error creating cursor")
+	}
+
+	for cur.Next(ctx) {
+		var u entity.User
+
+		err = cur.Decode(&u)
+
+		if err != nil {
+			return nil, errors.Wrap(err, "UnverifiedUserByEmailAndEmailVerificationToken: error decoding user")
+		}
+
+		return &u, nil
+	}
+
+	return nil, nil
 }
 
 func UnverifiedUserByEmail(email string) (*entity.User, error) {

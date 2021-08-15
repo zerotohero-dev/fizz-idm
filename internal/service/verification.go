@@ -11,14 +11,50 @@
 
 package service
 
-import "github.com/zerotohero-dev/fizz-entity/pkg/data"
+import (
+	"fmt"
+	"github.com/pkg/errors"
+	entity "github.com/zerotohero-dev/fizz-entity/pkg/data"
+	"github.com/zerotohero-dev/fizz-idm/internal/data"
+	"github.com/zerotohero-dev/fizz-logging/pkg/log"
+)
 
-func (s service) CreateAccount(user data.User) (*data.User, error) {
-	// Verify that the user exists in the database.
-	// Verify that the user is still unverified.
-	// Verify that the token this user has matches the token in the database.
-	// Update the user’s status.
-	/// panic("implement me")
+func (s service) CreateAccount(user entity.User) error {
+	u, err := data.UnverifiedUserByEmailAndEmailVerificationToken(
+		user.Email, user.EmailVerificationToken,
+	)
 
-	return nil, nil
+	if err != nil {
+		return errors.Wrap(
+			err,
+			fmt.Sprintf(
+				"error getting unverified user by email '%s'",
+				log.RedactEmail(user.Email),
+			),
+		)
+	}
+
+	if u == nil {
+		return errors.Wrap(
+			err,
+			fmt.Sprintf(
+				"error getting unverified user by email '%s'",
+				log.RedactEmail(user.Email),
+			),
+		)
+	}
+
+	// update status, and any other attributes that might be passed.
+	err = data.SetUserVerified(user)
+	if err != nil {
+		return errors.Wrap(
+			err,
+			fmt.Sprintf(
+				"error verifying the user: '%s'",
+				log.RedactEmail(user.Email),
+			),
+		)
+	}
+
+	return nil
 }
