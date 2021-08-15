@@ -21,22 +21,6 @@ import (
 	"time"
 )
 
-func updateUnverifiedUserEmailVerificationToken(
-	ctx context.Context, email, emailVerificationToken string,
-) (*mongo.UpdateResult, error) {
-	now := time.Now()
-
-	return users().UpdateOne(ctx, bson.D{
-		{entity.Keys.Email, email},
-		{entity.Keys.Status, entity.Status.Unverified},
-	}, bson.D{{
-		"$set", bson.D{
-			{entity.Keys.EmailVerificationToken, emailVerificationToken},
-			{entity.Keys.RecordUpdated, now},
-		},
-	}})
-}
-
 // verifyUnverifiedUserIfEmailVerificationTokenMatches sets the status of the
 // user to `verified` if the user has a valid email verification token and
 // also the user’s current status is `unverified` right now.
@@ -62,20 +46,6 @@ func verifyUnverifiedUserIfEmailVerificationTokenMatches(
 	}})
 }
 
-// TODO: delete this if we are not using it.
-func UpdateUnverifiedUserEmailVerificationToken(email, accountActivationToken string) error {
-	ctx, _ := connection.CreateDbContext()
-	_, err := updateUnverifiedUserEmailVerificationToken(
-		ctx, email, accountActivationToken,
-	)
-
-	if err != nil {
-		return errors.Wrap(err, "UpdateUnverifiedUserEmailVerificationToken: error updating data")
-	}
-
-	return nil
-}
-
 func SetUserVerified(user entity.User) error {
 	ctx, _ := connection.CreateDbContext()
 	_, err := verifyUnverifiedUserIfEmailVerificationTokenMatches(
@@ -84,7 +54,7 @@ func SetUserVerified(user entity.User) error {
 	)
 
 	if err != nil {
-		return errors.Wrap(err, "UpdateUnverifiedUserEmailVerificationToken: error updating data")
+		return errors.Wrap(err, "SetUserVerified: error updating data")
 	}
 
 	return nil

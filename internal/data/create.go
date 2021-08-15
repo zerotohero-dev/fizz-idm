@@ -9,7 +9,9 @@ import (
 
 // CreateUnverifiedUser creates an unverified user.
 // It assumes that `u` is well-formed and sanitized.
-// It does not alter the input user `u`, and it passes it to the DB as is.
+// It does not sanitize `u`. The sanitization ought to have
+// happened at the endpoint layer, as soon as we get the parameters
+// from the request.
 func CreateUnverifiedUser(u entity.User) error {
 	u.Status = entity.Status.Unverified
 

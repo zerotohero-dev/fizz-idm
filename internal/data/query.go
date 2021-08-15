@@ -94,7 +94,10 @@ func UnverifiedUserByEmailAndEmailVerificationToken(email, token string) (*entit
 	}()
 
 	if err != nil {
-		return nil, errors.Wrap(err, "UnverifiedUserByEmailAndEmailVerificationToken: error creating cursor")
+		return nil, errors.Wrap(
+			err,
+			"UnverifiedUserByEmailAndEmailVerificationToken: error creating cursor",
+		)
 	}
 
 	for cur.Next(ctx) {
@@ -103,59 +106,10 @@ func UnverifiedUserByEmailAndEmailVerificationToken(email, token string) (*entit
 		err = cur.Decode(&u)
 
 		if err != nil {
-			return nil, errors.Wrap(err, "UnverifiedUserByEmailAndEmailVerificationToken: error decoding user")
-		}
-
-		return &u, nil
-	}
-
-	return nil, nil
-}
-
-func UnverifiedUserByEmail(email string) (*entity.User, error) {
-	ctx, _ := connection.CreateDbContext()
-	cur, err := findUnverifiedUserByEmail(ctx, email)
-	defer func() {
-		_ = connection.CloseCursor(cur, ctx)
-	}()
-
-	if err != nil {
-		return nil, errors.Wrap(err, "UnverifiedUserByEmail: error creating cursor")
-	}
-
-	for cur.Next(ctx) {
-		var u entity.User
-
-		err = cur.Decode(&u)
-
-		if err != nil {
-			return nil, errors.Wrap(err, "UnverifiedUserByEmail: error decoding user")
-		}
-
-		return &u, nil
-	}
-
-	return nil, nil
-}
-
-func VerifiedUserByEmail(email string) (*entity.User, error) {
-	ctx, _ := connection.CreateDbContext()
-	cur, err := findVerifiedUserByEmail(ctx, email)
-	defer func() {
-		_ = connection.CloseCursor(cur, ctx)
-	}()
-
-	if err != nil {
-		return nil, errors.Wrap(err, "VerifiedUserByEmail: error creating cursor")
-	}
-
-	for cur.Next(ctx) {
-		var u entity.User
-
-		err = cur.Decode(&u)
-
-		if err != nil {
-			return nil, errors.Wrap(err, "VerifiedUserByEmail: error decoding user")
+			return nil, errors.Wrap(
+				err,
+				"UnverifiedUserByEmailAndEmailVerificationToken: error decoding user",
+			)
 		}
 
 		return &u, nil

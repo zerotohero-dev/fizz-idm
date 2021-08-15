@@ -15,7 +15,7 @@ TAG=$ECR_TAG_FIZZ_IDM
 REPO=$ECR_REPO 
 
 echo "»»» building"
-docker build -t $IMAGE:$TAG .
+docker build -t "$IMAGE":"$TAG" .
 retVal=$?
 if [ $retVal -ne 0 ]; then
   echo "Error building the image."
@@ -23,7 +23,7 @@ if [ $retVal -ne 0 ]; then
 fi
 
 echo "»»» tagging"
-docker tag $IMAGE:$TAG $REPO/$IMAGE:$TAG
+docker tag "$IMAGE":"$TAG" "$REPO"/"$IMAGE":"$TAG"
 retVal=$?
 if [ $retVal -ne 0 ]; then
   echo "Error tagging the image."
@@ -31,7 +31,7 @@ if [ $retVal -ne 0 ]; then
 fi
 
 echo "»»» pushing"
-docker push $REPO/$IMAGE:$TAG
+docker push "$REPO"/"$IMAGE":"$TAG"
 retVal=$?
 if [ $retVal -ne 0 ]; then
   echo "Error pushing the image."

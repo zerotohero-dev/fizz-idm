@@ -19,10 +19,7 @@ import (
 	"github.com/zerotohero-dev/fizz-idm/internal/service"
 	"github.com/zerotohero-dev/fizz-logging/pkg/log"
 	"github.com/zerotohero-dev/fizz-validation/pkg/sanitization"
-	"time"
 )
-
-const defaultName = "FizzBuzz Pro"
 
 func MakeSignupEndpoint(svc service.Service) endpoint.Endpoint {
 	return func(_ context.Context, request interface{}) (interface{}, error) {
@@ -43,25 +40,18 @@ func MakeSignupEndpoint(svc service.Service) endpoint.Endpoint {
 		req.Name = sanitization.SanitizeName(req.Name)
 		req.Email = sanitization.SanitizeEmail(req.Email)
 
-		if req.Name == "" {
-			req.Name = defaultName
-		}
-
 		if req.Email == "" {
 			return reqres.SignUpResponse{
 				Err: "signUpEndpoint: email required",
 			}, nil
 		}
 
-		now := time.Now()
 		err := svc.SignUp(data.User{
 			Email:                   req.Email,
 			Name:                    req.Name,
 			Password:                "",
 			Status:                  "",
 			SubscribedToMailingList: false,
-			RecordCreated:           now,
-			RecordUpdated:           now,
 		})
 
 		if err != nil {

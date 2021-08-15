@@ -44,7 +44,7 @@ func (s service) CreateAccount(user entity.User) error {
 		)
 	}
 
-	// update status, and any other attributes that might be passed.
+	// Update status, and any other attributes that might be passed.
 	err = data.SetUserVerified(user)
 	if err != nil {
 		return errors.Wrap(

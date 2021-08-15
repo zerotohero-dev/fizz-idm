@@ -47,10 +47,10 @@ func MakeCreateAccountEndpoint(svc service.Service) endpoint.Endpoint {
 		sanitizedToken := sanitization.SanitizeToken(req.Token)
 
 		if sanitizedName == "" {
-			sanitizedName = "FizzBuzz Pro" // TODO: to constants or config or somewhere.
+			sanitizedName = sanitization.DefaultFullName
 		}
 
-		if len(sanitizedPassword) < 6 { // TODO: to sanitization as a constant.
+		if len(sanitizedPassword) < sanitization.MinPasswordLength {
 			return reqres.CreateAccountResponse{
 				Err: "MakeCreateAccountEndpoint: password should be at least six characters",
 			}, nil
@@ -103,6 +103,7 @@ func MakeCreateAccountEndpoint(svc service.Service) endpoint.Endpoint {
 		// Send the email in a separate process.
 		go func() {
 			res, err := downstream.Endpoints().MailerWelcome(
+
 				// Using a separate context because this needs to stay alive
 				// even after the create account API request finishes.
 				context.Background(), reqres.RelayWelcomeMessageRequest{

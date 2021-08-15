@@ -1,3 +1,14 @@
+/*
+ *  \
+ *  \\,
+ *   \\\,^,.,,.                     Zero to Hero
+ *   ,;7~((\))`;;,,               <zerotohero.dev>
+ *   ,(@') ;)`))\;;',    stay up to date, be curious: learn
+ *    )  . ),((  ))\;,
+ *   /;`,,/7),)) )) )\,,
+ *  (& )`   (,((,((;( ))\,
+ */
+
 package downstream
 
 import (
@@ -9,7 +20,8 @@ import (
 	"net/http"
 )
 
-func decodeRelayWelcomeMessageResponse(_ context.Context, r *http.Response) (interface{}, error) {
+func decodeRelayWelcomeMessageResponse(
+	_ context.Context, r *http.Response) (interface{}, error) {
 	var response reqres.RelayWelcomeMessageResponse
 	if err := json.NewDecoder(r.Body).Decode(&response); err != nil {
 		return nil, err
@@ -17,7 +29,8 @@ func decodeRelayWelcomeMessageResponse(_ context.Context, r *http.Response) (int
 	return response, nil
 }
 
-func decodeRelaySendEmailVerificationMessageResponse(_ context.Context, r *http.Response) (interface{}, error) {
+func decodeRelaySendEmailVerificationMessageResponse(
+	_ context.Context, r *http.Response) (interface{}, error) {
 	var response reqres.RelayEmailVerificationMessageResponse
 	if err := json.NewDecoder(r.Body).Decode(&response); err != nil {
 		return nil, err
@@ -25,7 +38,8 @@ func decodeRelaySendEmailVerificationMessageResponse(_ context.Context, r *http.
 	return response, nil
 }
 
-func decodeRelayEmailVerifiedEmailResponse(_ context.Context, r *http.Response) (interface{}, error) {
+func decodeRelayEmailVerifiedEmailResponse(
+	_ context.Context, r *http.Response) (interface{}, error) {
 	var response reqres.RelayEmailVerifiedMessageResponse
 	if err := json.NewDecoder(r.Body).Decode(&response); err != nil {
 		return nil, err
@@ -33,7 +47,8 @@ func decodeRelayEmailVerifiedEmailResponse(_ context.Context, r *http.Response) 
 	return response, nil
 }
 
-func decodeTokenCreateResponse(_ context.Context, r *http.Response) (interface{}, error) {
+func decodeTokenCreateResponse(
+	_ context.Context, r *http.Response) (interface{}, error) {
 	var response reqres.TokenCreateResponse
 	if err := json.NewDecoder(r.Body).Decode(&response); err != nil {
 		return nil, err
@@ -41,7 +56,8 @@ func decodeTokenCreateResponse(_ context.Context, r *http.Response) (interface{}
 	return response, nil
 }
 
-func decodeHashCreateResponse(_ context.Context, r *http.Response) (interface{}, error) {
+func decodeHashCreateResponse(
+	_ context.Context, r *http.Response) (interface{}, error) {
 	var response reqres.HashCreateResponse
 	if err := json.NewDecoder(r.Body).Decode(&response); err != nil {
 		return nil, err
@@ -49,7 +65,8 @@ func decodeHashCreateResponse(_ context.Context, r *http.Response) (interface{},
 	return response, nil
 }
 
-func decodeJwtCreateResponse(_ context.Context, r *http.Response) (interface{}, error) {
+func decodeJwtCreateResponse(
+	_ context.Context, r *http.Response) (interface{}, error) {
 	var response reqres.JwtCreateResponse
 	if err := json.NewDecoder(r.Body).Decode(&response); err != nil {
 		return nil, err
@@ -57,7 +74,8 @@ func decodeJwtCreateResponse(_ context.Context, r *http.Response) (interface{}, 
 	return response, nil
 }
 
-func decodeJwtVerifyResponse(_ context.Context, r *http.Response) (interface{}, error) {
+func decodeJwtVerifyResponse(
+	_ context.Context, r *http.Response) (interface{}, error) {
 	var response reqres.JwtVerifyResponse
 	if err := json.NewDecoder(r.Body).Decode(&response); err != nil {
 		return nil, err
@@ -65,7 +83,8 @@ func decodeJwtVerifyResponse(_ context.Context, r *http.Response) (interface{}, 
 	return response, nil
 }
 
-func decodeHashVerifyResponse(_ context.Context, r *http.Response) (interface{}, error) {
+func decodeHashVerifyResponse(
+	_ context.Context, r *http.Response) (interface{}, error) {
 	var response reqres.HashVerifyResponse
 	if err := json.NewDecoder(r.Body).Decode(&response); err != nil {
 		return nil, err
@@ -73,7 +92,8 @@ func decodeHashVerifyResponse(_ context.Context, r *http.Response) (interface{},
 	return response, nil
 }
 
-func encodeRequest(_ context.Context, r *http.Request, request interface{}) error {
+func encodeRequest(
+	_ context.Context, r *http.Request, request interface{}) error {
 	var buf bytes.Buffer
 
 	r.Header.Add("Content-Type", "application/json")
