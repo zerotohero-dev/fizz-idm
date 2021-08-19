@@ -20,7 +20,7 @@ require (
 	github.com/youmark/pkcs8 v0.0.0-20201027041543-1326539a0a0a // indirect
 	github.com/zerotohero-dev/fizz-app v0.4.0
 	github.com/zerotohero-dev/fizz-entity v0.5.3
-	github.com/zerotohero-dev/fizz-env v0.3.3
+	github.com/zerotohero-dev/fizz-env v0.3.6
 	github.com/zerotohero-dev/fizz-logging v0.2.0
 	github.com/zerotohero-dev/fizz-validation v0.1.2
 	go.mongodb.org/mongo-driver v1.7.1
