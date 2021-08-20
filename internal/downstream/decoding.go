@@ -38,15 +38,6 @@ func decodeRelaySendEmailVerificationMessageResponse(
 	return response, nil
 }
 
-func decodeRelayEmailVerifiedEmailResponse(
-	_ context.Context, r *http.Response) (interface{}, error) {
-	var response reqres.RelayEmailVerifiedMessageResponse
-	if err := json.NewDecoder(r.Body).Decode(&response); err != nil {
-		return nil, err
-	}
-	return response, nil
-}
-
 func decodeTokenCreateResponse(
 	_ context.Context, r *http.Response) (interface{}, error) {
 	var response reqres.TokenCreateResponse

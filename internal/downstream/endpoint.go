@@ -28,7 +28,6 @@ var urls = struct {
 	CryptoJwtVerify    string
 	MailerWelcome      string
 	MailerVerification string
-	MailerVerified     string
 	MailerReset        string
 	MailerConfirm      string
 	MailerSubscribed   string
@@ -40,7 +39,6 @@ var urls = struct {
 	CryptoJwtVerify:    "/v1/jwt/verify",
 	MailerWelcome:      "/v1/relay/welcome",
 	MailerVerification: "/v1/relay/verification",
-	MailerVerified:     "/v1/relay/verified",
 	MailerReset:        "/v1/relay/reset",
 	MailerConfirm:      "/v1/relay/confirm",
 	MailerSubscribed:   "/v1/relay/subscribed",
@@ -54,7 +52,6 @@ type downstream struct {
 	CryptoJwtVerify    endpoint.Endpoint
 	MailerWelcome      endpoint.Endpoint
 	MailerVerification endpoint.Endpoint
-	MailerVerified     endpoint.Endpoint
 }
 
 func join(baseUrl, path string) *url.URL {
@@ -132,9 +129,6 @@ func makeMailerEndpoint(en env.FizzEnv, path string) endpoint.Endpoint {
 	case urls.MailerVerification:
 		return http.NewClient("POST", u, encodeRequest,
 			decodeRelaySendEmailVerificationMessageResponse).Endpoint()
-	case urls.MailerVerified:
-		return http.NewClient("POST", u, encodeRequest,
-			decodeRelayEmailVerifiedEmailResponse).Endpoint()
 	case urls.MailerReset:
 		panic("Implement me")
 	case urls.MailerConfirm:
@@ -164,7 +158,6 @@ func Init(en env.FizzEnv) {
 		CryptoJwtVerify:    makeCryptoEndpoint(en, urls.CryptoJwtVerify),
 		MailerWelcome:      makeMailerEndpoint(en, urls.MailerWelcome),
 		MailerVerification: makeMailerEndpoint(en, urls.MailerVerification),
-		MailerVerified:     makeMailerEndpoint(en, urls.MailerVerified),
 		// TODO: there are endpoints to implement, you’ll probably need them too.
 	}
 }
