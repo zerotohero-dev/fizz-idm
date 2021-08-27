@@ -1,3 +1,5 @@
+#!/usr/bin/env zsh
+
 #  \
 #  \\,
 #   \\\,^,.,,.                     Zero to Hero
@@ -7,8 +9,4 @@
 #   /;`,,/7),)) )) )\,,
 #  (& )`   (,((,((;( ))\,
 
-.idea
-/fizz-idm
-.DS_Store
-.netrc
-main
+go build cmd/main.go
