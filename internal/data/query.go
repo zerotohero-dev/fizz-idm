@@ -104,11 +104,41 @@ func UnverifiedUserByEmailAndEmailVerificationToken(email, token string) (*entit
 		var u entity.User
 
 		err = cur.Decode(&u)
-
 		if err != nil {
 			return nil, errors.Wrap(
 				err,
 				"UnverifiedUserByEmailAndEmailVerificationToken: error decoding user",
+			)
+		}
+
+		return &u, nil
+	}
+
+	return nil, nil
+}
+
+func VerifiedUserByEmail(email string) (*entity.User, error) {
+	ctx, _ := connection.CreateDbContext()
+	cur, err := findVerifiedUserByEmail(ctx, email)
+	defer func() {
+		_ = connection.CloseCursor(cur, ctx)
+	}()
+
+	if err != nil {
+		return nil, errors.Wrap(
+			err,
+			"VerifiedUserByEmail: error creating cursor",
+		)
+	}
+
+	for cur.Next(ctx) {
+		var u entity.User
+
+		err = cur.Decode(&u)
+		if err != nil {
+			return nil, errors.Wrap(
+				err,
+				"VerifiedUserByEmail: error decoding user",
 			)
 		}
 

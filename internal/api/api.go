@@ -58,7 +58,7 @@ func InitializeEndpoints(e env.FizzEnv, router *mux.Router) {
 		http.NewServer(
 			endpoint.MakeLoginEndpoint(svc),
 			app.ContentTypeValidatingMiddleware(transport.DecodeLoginRequest),
-			app.EncodeResponse,
+			transport.EncodeLoginResponse(e),
 		),
 		router, "POST", prefix, urls.Login,
 	)

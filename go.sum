@@ -452,6 +452,8 @@ github.com/zerotohero-dev/fizz-app v0.2.2 h1:pPoXZXdv4RGIIFpEF9M6JaWpUl/kKFIbMmj
 github.com/zerotohero-dev/fizz-app v0.2.2/go.mod h1:fN7pQNNhJk89AB/lOTpoHG/9tnX67bfNWung5zT9FIw=
 github.com/zerotohero-dev/fizz-app v0.4.0 h1:BtkMQCrIEj9kRPY+3voNtmRfQEVVhSxNADOE+nECKPM=
 github.com/zerotohero-dev/fizz-app v0.4.0/go.mod h1:fN7pQNNhJk89AB/lOTpoHG/9tnX67bfNWung5zT9FIw=
+github.com/zerotohero-dev/fizz-app v0.4.1 h1:zHckZ+rTmEukcYI5gMdGRWrmNNTLRfjDjAUFGk1log8=
+github.com/zerotohero-dev/fizz-app v0.4.1/go.mod h1:fN7pQNNhJk89AB/lOTpoHG/9tnX67bfNWung5zT9FIw=
 github.com/zerotohero-dev/fizz-entity v0.1.0/go.mod h1:PPwQoZlPHz+lTCdppAk+EzEshjivO8JvZTwfqz1DOP4=
 github.com/zerotohero-dev/fizz-entity v0.1.2 h1:ZadXy7PcwnFJvgCo8ltm6TvrbxG8U+PKd84hiL6KfwY=
 github.com/zerotohero-dev/fizz-entity v0.1.2/go.mod h1:PPwQoZlPHz+lTCdppAk+EzEshjivO8JvZTwfqz1DOP4=
@@ -527,6 +529,8 @@ github.com/zerotohero-dev/fizz-env v0.3.4 h1:Nk2RTCVun1HzFrLikFHytF2/rOuH8ZDpMkw
 github.com/zerotohero-dev/fizz-env v0.3.4/go.mod h1:FPXQfRJ46qdmUXBaeanHg1dgx/wK2vJEmH/dTRr10tk=
 github.com/zerotohero-dev/fizz-env v0.3.6 h1:/rShX463MAXpmR6bG8hFpXKfZ19NIHWwU14iw8HLPls=
 github.com/zerotohero-dev/fizz-env v0.3.6/go.mod h1:FPXQfRJ46qdmUXBaeanHg1dgx/wK2vJEmH/dTRr10tk=
+github.com/zerotohero-dev/fizz-env v0.3.7 h1:y5eepj63wnvzicd0aCpVymjC+C3hfCDowpdUw4fKWrw=
+github.com/zerotohero-dev/fizz-env v0.3.7/go.mod h1:FPXQfRJ46qdmUXBaeanHg1dgx/wK2vJEmH/dTRr10tk=
 github.com/zerotohero-dev/fizz-logging v0.1.4/go.mod h1:s6XsyiMGmW50npkyU2x+ZiUjoLnzI6zGnAlkcjLh9SA=
 github.com/zerotohero-dev/fizz-logging v0.1.6 h1:6z/xBqeyVSGnNL0kv8wN5QsxcyqauPopfX6JEoMo3io=
 github.com/zerotohero-dev/fizz-logging v0.1.6/go.mod h1:SGQjBmDNT/ZwjbsuNEdH8j88P0tI0+aHfbQKDx7f0ho=
@@ -684,6 +688,8 @@ golang.org/x/sys v0.0.0-20210630005230-0f9fa26af87c h1:F1jZWGFhYfh0Ci55sIpILtKKK
 golang.org/x/sys v0.0.0-20210630005230-0f9fa26af87c/go.mod h1:oPkhp1MJrh7nUepCBck5+mAzfO9JrbApNNgaTdGDITg=
 golang.org/x/sys v0.0.0-20210818153620-00dd8d7831e7 h1:/bmDWM82ZX7TawqxuI8kVjKI0TXHdSY6pHJArewwHtU=
 golang.org/x/sys v0.0.0-20210818153620-00dd8d7831e7/go.mod h1:oPkhp1MJrh7nUepCBck5+mAzfO9JrbApNNgaTdGDITg=
+golang.org/x/sys v0.0.0-20210823070655-63515b42dcdf h1:2ucpDCmfkl8Bd/FsLtiD653Wf96cW37s+iGx93zsu4k=
+golang.org/x/sys v0.0.0-20210823070655-63515b42dcdf/go.mod h1:oPkhp1MJrh7nUepCBck5+mAzfO9JrbApNNgaTdGDITg=
 golang.org/x/term v0.0.0-20201126162022-7de9c90e9dd1/go.mod h1:bj7SfCRtBDWHUb9snDiAeCFNEtKQo2Wmx5Cou7ajbmo=
 golang.org/x/text v0.3.0/go.mod h1:NqM8EUOU14njkJ3fqMW+pc6Ldnwhi/IjpwHt7yyuwOQ=
 golang.org/x/text v0.3.2/go.mod h1:bEr9sfX3Q8Zfm5fL9x+3itogRgK3+ptLWKqgva+5dAk=
