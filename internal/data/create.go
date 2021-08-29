@@ -1,3 +1,14 @@
+/*
+ *  \
+ *  \\,
+ *   \\\,^,.,,.                     Zero to Hero
+ *   ,;7~((\))`;;,,               <zerotohero.dev>
+ *   ,(@') ;)`))\;;',    stay up to date, be curious: learn
+ *    )  . ),((  ))\;,
+ *   /;`,,/7),)) )) )\,,
+ *  (& )`   (,((,((;( ))\,
+ */
+
 package data
 
 import (
@@ -19,6 +30,7 @@ func CreateUnverifiedUser(u entity.User) error {
 	u.RecordCreated = now
 	u.RecordUpdated = now
 	u.Password = ""
+	u.StripeSubscription = nil
 
 	ctx, _ := connection.CreateDbContext()
 	_, err := users().InsertOne(ctx, u)

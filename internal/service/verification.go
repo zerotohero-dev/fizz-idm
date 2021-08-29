@@ -35,13 +35,10 @@ func (s service) CreateAccount(user entity.User) error {
 	}
 
 	if u == nil {
-		return errors.Wrap(
-			err,
-			fmt.Sprintf(
-				"error getting unverified user by email '%s'",
-				log.RedactEmail(user.Email),
-			),
-		)
+		return errors.New(fmt.Sprintf(
+			"error getting unverified user by email '%s'",
+			log.RedactEmail(user.Email),
+		))
 	}
 
 	// Update status, and any other attributes that might be passed.

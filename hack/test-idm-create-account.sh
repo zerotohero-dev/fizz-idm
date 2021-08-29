@@ -17,7 +17,7 @@ curl --request POST \
   --data '{
 	"name": "Mr Potato Head",
 	"email": "potato3@volkan.io",
-	"token": "potato",
+	"token": "dummy",
 	"password": "lorem-ipsum-dolar-sid-ahmed",
 	"optIn": true
 }'

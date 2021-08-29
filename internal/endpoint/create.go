@@ -129,6 +129,8 @@ func MakeCreateAccountEndpoint(svc service.Service) endpoint.Endpoint {
 			}
 		}()
 
-		return reqres.CreateAccountResponse{}, nil
+		return reqres.CreateAccountResponse{
+			Verified: true,
+		}, nil
 	}
 }
