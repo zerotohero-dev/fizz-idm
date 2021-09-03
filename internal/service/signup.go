@@ -17,6 +17,7 @@ import (
 	"github.com/pkg/errors"
 	entity "github.com/zerotohero-dev/fizz-entity/pkg/data"
 	"github.com/zerotohero-dev/fizz-entity/pkg/reqres"
+	"github.com/zerotohero-dev/fizz-env/pkg/env"
 	"github.com/zerotohero-dev/fizz-idm/internal/data"
 	"github.com/zerotohero-dev/fizz-idm/internal/downstream"
 	"github.com/zerotohero-dev/fizz-logging/pkg/log"
@@ -73,6 +74,31 @@ func sendEmailVerificationToken(name, email string, emailVerificationToken strin
 	}()
 }
 
+func sendWaitlistEmail(name, email string) {
+	go func() {
+		res, err := downstream.Endpoints().MailerVerification(
+
+			// We are using context.Background() because we do not want this to
+			// cancel prematurely. go-kit cancels the owner context as soon as
+			// the function exits.
+			context.Background(), reqres.RelayWelcomeMessageRequest{
+				Email: email,
+				Name:  name,
+			})
+
+		if err != nil {
+			log.Err("Problem sending Waitlist email (%s) (%s)",
+				log.RedactEmail(email), err.Error())
+		}
+
+		er := res.(reqres.RelayWelcomeMessageResponse)
+		if er.Err != "" {
+			log.Err("Problem sending Waitlist email (%s) (%s)",
+				log.RedactEmail(email), er.Err)
+		}
+	}()
+}
+
 func (s service) SignUp(user entity.User) error {
 	res, err := downstream.Endpoints().CryptoTokenCreate(
 		s.Context(), reqres.TokenCreateRequest{})
@@ -124,7 +150,13 @@ func (s service) SignUp(user entity.User) error {
 		)
 	}
 
-	sendEmailVerificationToken(user.Name, user.Email, tr.Token)
+	launchState := env.FizzEnv().Idm.LaunchState
+
+	if launchState == "waitlist" {
+		sendWaitlistEmail(user.Name, user.Email)
+	} else {
+		sendEmailVerificationToken(user.Name, user.Email, tr.Token)
+	}
 
 	return nil
 }
