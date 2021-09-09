@@ -13,10 +13,17 @@ package transport
 
 import (
 	"context"
+	"github.com/zerotohero-dev/fizz-entity/pkg/reqres"
 	"net/http"
 )
 
 func DecodeInfoRequest(_ context.Context, r *http.Request) (interface{}, error) {
-	panic("Implement me!")
-	return nil, nil
+	var request reqres.UserInfoRequest
+
+	authCookie, _ := r.Cookie("auth")
+	if authCookie != nil {
+		request.AuthToken = authCookie.Value
+	}
+
+	return request, nil
 }
