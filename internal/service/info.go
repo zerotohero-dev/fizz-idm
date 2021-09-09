@@ -16,6 +16,7 @@ import (
 	"github.com/pkg/errors"
 	entity "github.com/zerotohero-dev/fizz-entity/pkg/data"
 	"github.com/zerotohero-dev/fizz-entity/pkg/reqres"
+	"github.com/zerotohero-dev/fizz-idm/internal/data"
 	"github.com/zerotohero-dev/fizz-idm/internal/downstream"
 	"github.com/zerotohero-dev/fizz-logging/pkg/log"
 )
@@ -26,16 +27,16 @@ func (s service) Info(authToken string) (entity.UserInfo, error) {
 	)
 
 	if err != nil {
-		return data.UserInfo{}, errors.New("Info: Invalid auth token.")
+		return entity.UserInfo{}, errors.New("Info: Invalid auth token.")
 	}
 
 	vr := res.(reqres.JwtVerifyResponse)
 	if vr.Err != "" {
-		return data.UserInfo{}, errors.New(fmt.Sprintf("Info: %s", vr.Err))
+		return entity.UserInfo{}, errors.New(fmt.Sprintf("Info: %s", vr.Err))
 	}
 
 	if !vr.Valid {
-		return data.UserInfo{}, errors.New(
+		return entity.UserInfo{}, errors.New(
 			fmt.Sprintf(
 				"Info: User does not seem to be valid (%s)",
 				log.RedactEmail(vr.Email),
@@ -44,20 +45,30 @@ func (s service) Info(authToken string) (entity.UserInfo, error) {
 	}
 
 	email := vr.Email
-	user, err := data.ActiveUserByEmail(email)
-
+	user, err := data.VerifiedUserByEmail(email)
 	if err != nil {
-		return entity.UserInfo{}, errors.New(fmt.Sprintf("Info: Error querying the database for user (%s)", log.RedactEmail(vr.Email)))
+		return entity.UserInfo{}, errors.New(
+			fmt.Sprintf(
+				"Info: Error querying the database for user (%s)",
+				log.RedactEmail(vr.Email),
+			),
+		)
 	}
 
 	if user.Email == "" {
-		return entity.UserInfo{}, errors.New(fmt.Sprintf("Info: Got blank user (%s)", log.RedactEmail(vr.Email)))
+		return entity.UserInfo{}, errors.New(
+			fmt.Sprintf("Info: Got blank user (%s)", log.RedactEmail(vr.Email)),
+		)
+	}
+
+	subscriptionId := ""
+	if user.StripeSubscription != nil {
+		subscriptionId = user.StripeSubscription.StripeProductId
 	}
 
 	return entity.UserInfo{
-		Email:    user.Email,
-		FullName: user.FullName,
-		Alias:    user.Alias,
-		Courses:  user.Courses,
+		Email:        user.Email,
+		Name:         user.Name,
+		Subscription: subscriptionId,
 	}, nil
 }

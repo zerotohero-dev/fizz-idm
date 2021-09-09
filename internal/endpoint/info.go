@@ -52,14 +52,9 @@ func MakeInfoEndpoint(svc service.Service) endpoint.Endpoint {
 			}, nil
 		}
 
-		subscriptionId := ""
-		if infoResult.StripeSubscription != nil {
-			subscriptionId = infoResult.StripeSubscription.StripeProductId
-		}
-
 		return reqres.UserInfoResponse{
 			Email:         infoResult.Email,
-			Subscription:  subscriptionId,
+			Subscription:  infoResult.Subscription,
 			Name:          infoResult.Name,
 		}, nil
 	}

@@ -511,6 +511,8 @@ github.com/zerotohero-dev/fizz-entity v0.5.6 h1:oxJvQgN0Zb6FjK61oLEj7KGGAHUiapTM
 github.com/zerotohero-dev/fizz-entity v0.5.6/go.mod h1:n1vDpMX7HXLUOpzUkfJaWBkmbHb5wcszMriugFVqrjs=
 github.com/zerotohero-dev/fizz-entity v0.5.7 h1:7AZtpuloBbncvzMRsvimUCx7btNi68dlfKREf7CcJVE=
 github.com/zerotohero-dev/fizz-entity v0.5.7/go.mod h1:n1vDpMX7HXLUOpzUkfJaWBkmbHb5wcszMriugFVqrjs=
+github.com/zerotohero-dev/fizz-entity v0.5.8 h1:B0xgaMs4PxdIkT7SrfnWaEMOGTv/DNaQklcNI1pw0bo=
+github.com/zerotohero-dev/fizz-entity v0.5.8/go.mod h1:n1vDpMX7HXLUOpzUkfJaWBkmbHb5wcszMriugFVqrjs=
 github.com/zerotohero-dev/fizz-env v0.1.9/go.mod h1:FPXQfRJ46qdmUXBaeanHg1dgx/wK2vJEmH/dTRr10tk=
 github.com/zerotohero-dev/fizz-env v0.1.13/go.mod h1:FPXQfRJ46qdmUXBaeanHg1dgx/wK2vJEmH/dTRr10tk=
 github.com/zerotohero-dev/fizz-env v0.1.17 h1:HMR88VJYB0/nXeeeZRafWwqvoOI9F0Qx+1FmrRZq2Kg=
