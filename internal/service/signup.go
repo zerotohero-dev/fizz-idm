@@ -12,15 +12,26 @@
 package service
 
 import (
-	"context"
 	"fmt"
 	"github.com/pkg/errors"
 	entity "github.com/zerotohero-dev/fizz-entity/pkg/data"
 	"github.com/zerotohero-dev/fizz-entity/pkg/reqres"
+	"github.com/zerotohero-dev/fizz-env/pkg/env"
 	"github.com/zerotohero-dev/fizz-idm/internal/data"
 	"github.com/zerotohero-dev/fizz-idm/internal/downstream"
-	"github.com/zerotohero-dev/fizz-logging/pkg/log"
 )
+
+
+type Status int
+
+const (
+	Waitlist Status = iota
+	Signup
+)
+
+func (state Status) String() string {
+	return [...]string{"waitlist", "signup"}[state]
+}
 
 func createUnverifiedUser(user entity.User) error {
 	exists, err := data.UserExists(user.Email)
@@ -46,32 +57,7 @@ func createUnverifiedUser(user entity.User) error {
 	return data.CreateUnverifiedUser(user)
 }
 
-func sendEmailVerificationToken(name, email string, emailVerificationToken string) {
-	go func() {
 
-		res, err := downstream.Endpoints().MailerVerification(
-
-			// We are using context.Background() because we do not want this to
-			// cancel prematurely. go-kit cancels the owner context as soon as
-			// the function exits.
-			context.Background(), reqres.RelayEmailVerificationMessageRequest{
-				Email: email,
-				Name:  name,
-				Token: emailVerificationToken,
-			})
-
-		if err != nil {
-			log.Err("Problem sending activation email (%s) (%s)",
-				log.RedactEmail(email), err.Error())
-		}
-
-		er := res.(reqres.RelayEmailVerificationMessageResponse)
-		if er.Err != "" {
-			log.Err("Problem sending activation email (%s) (%s)",
-				log.RedactEmail(email), er.Err)
-		}
-	}()
-}
 
 func (s service) SignUp(user entity.User) error {
 	res, err := downstream.Endpoints().CryptoTokenCreate(
@@ -124,7 +110,13 @@ func (s service) SignUp(user entity.User) error {
 		)
 	}
 
-	sendEmailVerificationToken(user.Name, user.Email, tr.Token)
+	launchState := env.New().Idm.LaunchState
+
+	if launchState == Waitlist.String() {
+		sendWaitlistEmail(user.Name, user.Email)
+	} else {
+		sendEmailVerificationToken(user.Name, user.Email, tr.Token)
+	}
 
 	return nil
 }
