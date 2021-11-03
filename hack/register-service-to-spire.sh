@@ -9,7 +9,7 @@
 #   /;`,,/7),)) )) )\,,
 #  (& )`   (,((,((;( ))\,
 
-# TODO: create an article out of this stream.
+# TODO: create an article out of this stream(s).
 
 # bin/spire-server token generate -spiffeID spiffe://fizzbuzz.pro/fizz-agent
 # cfe69e0d-db37-4550-951b-3c691ac42612
