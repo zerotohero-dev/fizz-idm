@@ -45,6 +45,7 @@ import (
 //// #engregion mTLS client
 
 const (
+	// TODO: get these from environment config.
 	socketPath    = "unix:///tmp/spire-agent/public/api.sock"
 	serverAddress = "localhost:55553"
 )
@@ -53,11 +54,10 @@ func startSpireMtlsClient() {
 	ctx, cancel := context.WithTimeout(context.Background(), 3000000*time.Second)
 	defer cancel()
 
-	spiffeId := spiffeid.Must("fizzbuzz.pro", "app", "idm")
+	// TODO: get this from environment.
+	spiffeId := spiffeid.Must("fizzbuzz.pro", "app", "default")
 
 	fmt.Println(spiffeId)
-
-	// SPIFFE_ENDPOINT_SOCKET=unix:///tmp/spire-agent/public/api.sock
 
 	conn, err := spiffetls.DialWithMode(ctx, "tcp", serverAddress,
 		spiffetls.MTLSClientWithSourceOptions(
@@ -66,6 +66,7 @@ func startSpireMtlsClient() {
 			workloadapi.WithClientOptions(workloadapi.WithAddr(socketPath)),
 		))
 	if err != nil {
+		// TODO: retry if connection failed.
 		log.Fatalf("Unable to create TLS connection: %v", err)
 	}
 	defer func(conn net.Conn) {

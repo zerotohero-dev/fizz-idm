@@ -12,3 +12,4 @@
 .DS_Store
 .netrc
 main
+go_build_github_com_zerotohero_dev_fizz_idm_cmd
