@@ -17,47 +17,47 @@ import (
 	entity "github.com/zerotohero-dev/fizz-entity/pkg/data"
 	"github.com/zerotohero-dev/fizz-entity/pkg/reqres"
 	"github.com/zerotohero-dev/fizz-idm/internal/data"
-	"github.com/zerotohero-dev/fizz-idm/internal/downstream"
+	"github.com/zerotohero-dev/fizz-idm/internal/mtls"
 	"github.com/zerotohero-dev/fizz-logging/pkg/log"
 )
 
 func (s service) Info(authToken string) (entity.UserInfo, error) {
-	res, err := downstream.Endpoints().CryptoJwtVerify(
-		s.ctx, reqres.JwtVerifyRequest{Token: authToken},
-	)
+	res, err := mtls.CryptoJwtVerify(reqres.JwtVerifyRequest{
+		Token: authToken,
+	})
 
 	if err != nil {
 		return entity.UserInfo{}, errors.New("Info: Invalid auth token.")
 	}
 
-	vr := res.(reqres.JwtVerifyResponse)
-	if vr.Err != "" {
-		return entity.UserInfo{}, errors.New(fmt.Sprintf("Info: %s", vr.Err))
+	if res.Err != "" {
+		return entity.UserInfo{}, errors.New(fmt.Sprintf("Info: %s", res.Err))
 	}
 
-	if !vr.Valid {
+	if !res.Valid {
 		return entity.UserInfo{}, errors.New(
 			fmt.Sprintf(
 				"Info: User does not seem to be valid (%s)",
-				log.RedactEmail(vr.Email),
+				// TODO: The logger library should internally do this.
+				log.RedactEmail(res.Email),
 			),
 		)
 	}
 
-	email := vr.Email
+	email := res.Email
 	user, err := data.VerifiedUserByEmail(email)
 	if err != nil {
 		return entity.UserInfo{}, errors.New(
 			fmt.Sprintf(
 				"Info: Error querying the database for user (%s)",
-				log.RedactEmail(vr.Email),
+				log.RedactEmail(res.Email),
 			),
 		)
 	}
 
 	if user.Email == "" {
 		return entity.UserInfo{}, errors.New(
-			fmt.Sprintf("Info: Got blank user (%s)", log.RedactEmail(vr.Email)),
+			fmt.Sprintf("Info: Got blank user (%s)", log.RedactEmail(res.Email)),
 		)
 	}
 

@@ -17,7 +17,7 @@ import (
 	entity "github.com/zerotohero-dev/fizz-entity/pkg/data"
 	"github.com/zerotohero-dev/fizz-entity/pkg/reqres"
 	"github.com/zerotohero-dev/fizz-idm/internal/data"
-	"github.com/zerotohero-dev/fizz-idm/internal/downstream"
+	"github.com/zerotohero-dev/fizz-idm/internal/mtls"
 )
 
 func (s service) LogIn(email, password string) (entity.LoginResult, error) {
@@ -37,8 +37,10 @@ func (s service) LogIn(email, password string) (entity.LoginResult, error) {
 		}, errors.New(fmt.Sprintf("LogIn: User not found (%s)", email))
 	}
 
-	res, err := downstream.Endpoints().CryptoHashVerify(
-		s.ctx, reqres.HashVerifyRequest{Value: password, Hash: user.Password})
+	res, err := mtls.CryptoHashVerify(reqres.HashVerifyRequest{
+		Value: password,
+		Hash:  user.Password,
+	})
 
 	if err != nil {
 		return entity.LoginResult{
@@ -49,22 +51,21 @@ func (s service) LogIn(email, password string) (entity.LoginResult, error) {
 			)
 	}
 
-	vr := res.(reqres.HashVerifyResponse)
-	if vr.Err != "" {
+	if res.Err != "" {
 		return entity.LoginResult{
 				Token: "",
 			}, errors.New(
-				fmt.Sprintf("LogIn: Error in password verification: %s (%s)", vr.Err, email),
+				fmt.Sprintf("LogIn: Error in password verification: %s (%s)", res.Err, email),
 			)
 	}
 
-	if !vr.Verified {
+	if !res.Verified {
 		return entity.LoginResult{
 			Token: "",
 		}, errors.New(fmt.Sprintf("LogIn: Password mismatch (%s)", email))
 	}
 
-	res, err = downstream.Endpoints().CryptoJwtCreate(s.ctx, reqres.JwtCreateRequest{
+	jwtRes, err := mtls.CryptoJwtCreate(reqres.JwtCreateRequest{
 		Email: user.Email,
 	})
 
@@ -74,16 +75,15 @@ func (s service) LogIn(email, password string) (entity.LoginResult, error) {
 		}, errors.Wrap(err, fmt.Sprintf("LogIn: cannot sign token (%s)", email))
 	}
 
-	cr := res.(reqres.JwtCreateResponse)
-	if cr.Err != "" {
+	if jwtRes.Err != "" {
 		return entity.LoginResult{
 				Token: "",
 			}, errors.New(
-				fmt.Sprintf("LogIn: Error in JWT sign Response %s (%s)", cr.Err, email),
+				fmt.Sprintf("LogIn: Error in JWT sign Response %s (%s)", jwtRes.Err, email),
 			)
 	}
 
-	token := cr.Token
+	token := jwtRes.Token
 	if token == "" {
 		return entity.LoginResult{
 			Token: "",

@@ -30,7 +30,7 @@ func EncodeLoginResponse(e env.FizzEnv) kitHttp.EncodeResponseFunc {
 		rr := response.(reqres.LogInResponse)
 
 		// Make this a central function; it is repeated!
-		expiration := time.Now().Add(e.Idm.JwtCookieExpiryHours * time.Hour)
+		expiration := time.Now().Add(e.Idm.JwtCookieExpiration)
 		cookie := http.Cookie{
 			Name: "auth",
 			// Path / required for other services to consume this cookie.

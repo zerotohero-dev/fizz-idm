@@ -12,13 +12,12 @@
 package service
 
 import (
-	"context"
 	"fmt"
 	"github.com/pkg/errors"
 	entity "github.com/zerotohero-dev/fizz-entity/pkg/data"
 	"github.com/zerotohero-dev/fizz-entity/pkg/reqres"
 	"github.com/zerotohero-dev/fizz-idm/internal/data"
-	"github.com/zerotohero-dev/fizz-idm/internal/downstream"
+	"github.com/zerotohero-dev/fizz-idm/internal/mtls"
 	"github.com/zerotohero-dev/fizz-logging/pkg/log"
 )
 
@@ -47,35 +46,29 @@ func createUnverifiedUser(user entity.User) error {
 }
 
 func sendEmailVerificationToken(name, email string, emailVerificationToken string) {
-	go func() {
-
-		res, err := downstream.Endpoints().MailerVerification(
-
-			// We are using context.Background() because we do not want this to
-			// cancel prematurely. go-kit cancels the owner context as soon as
-			// the function exits.
-			context.Background(), reqres.RelayEmailVerificationMessageRequest{
-				Email: email,
-				Name:  name,
-				Token: emailVerificationToken,
-			})
-
-		if err != nil {
-			log.Err("Problem sending activation email (%s) (%s)",
-				log.RedactEmail(email), err.Error())
-		}
-
-		er := res.(reqres.RelayEmailVerificationMessageResponse)
-		if er.Err != "" {
-			log.Err("Problem sending activation email (%s) (%s)",
-				log.RedactEmail(email), er.Err)
-		}
-	}()
+	log.Info("implement me:", name, email)
+	//go func() {
+	//	res, err := mtls.MailerVerify(reqres.RelayEmailVerificationMessageRequest{
+	//		Email: email,
+	//		Name:  name,
+	//		Token: emailVerificationToken,
+	//	})
+	//
+	//	if err != nil {
+	//		log.Err("Problem sending activation email (%s) (%s)",
+	//			log.RedactEmail(email), err.Error())
+	//	}
+	//
+	//	if res.Err != "" {
+	//		log.Err("Problem sending activation email (%s) (%s)",
+	//			log.RedactEmail(email), res.Err)
+	//	}
+	//}()
 }
 
 func (s service) SignUp(user entity.User) error {
-	res, err := downstream.Endpoints().CryptoTokenCreate(
-		s.Context(), reqres.TokenCreateRequest{})
+	res, err := mtls.CryptoTokenCreate(reqres.TokenCreateRequest{})
+
 	if err != nil {
 		return errors.Wrap(
 			err,
@@ -86,17 +79,16 @@ func (s service) SignUp(user entity.User) error {
 		)
 	}
 
-	tr, ok := res.(reqres.TokenCreateResponse)
-	if tr.Err != "" {
+	if res.Err != "" {
 		return errors.New(
 			fmt.Sprintf(
 				"SignUp: Error in TokenResponse %s (%s)",
-				tr.Err, user.Email,
+				res.Err, user.Email,
 			),
 		)
 	}
 
-	if !ok {
+	if res.Token == "" {
 		return errors.New(
 			fmt.Sprintf(
 				"SignUp: error creating account activation token (%s)",
@@ -105,16 +97,7 @@ func (s service) SignUp(user entity.User) error {
 		)
 	}
 
-	if tr.Token == "" {
-		return errors.New(
-			fmt.Sprintf(
-				"SignUp: error creating account activation token (%s)",
-				user.Email,
-			),
-		)
-	}
-
-	user.EmailVerificationToken = tr.Token
+	user.EmailVerificationToken = res.Token
 
 	err = createUnverifiedUser(user)
 	if err != nil {
@@ -124,7 +107,7 @@ func (s service) SignUp(user entity.User) error {
 		)
 	}
 
-	sendEmailVerificationToken(user.Name, user.Email, tr.Token)
+	sendEmailVerificationToken(user.Name, user.Email, user.EmailVerificationToken)
 
 	return nil
 }

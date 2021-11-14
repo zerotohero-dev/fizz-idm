@@ -13,7 +13,7 @@ package endpoint
 
 import (
 	"context"
-	"github.com/zerotohero-dev/fizz-idm/internal/downstream"
+	"github.com/zerotohero-dev/fizz-idm/internal/mtls"
 
 	"github.com/go-kit/kit/endpoint"
 	entity "github.com/zerotohero-dev/fizz-entity/pkg/data"
@@ -57,12 +57,9 @@ func MakeCreateAccountEndpoint(svc service.Service) endpoint.Endpoint {
 		}
 
 		// Hashing the password.
-		res, err := downstream.Endpoints().CryptoHashCreate(
-			svc.Context(),
-			reqres.HashCreateRequest{
-				Value: sanitizedPassword,
-			},
-		)
+		res, err := mtls.CryptoHashCreate(reqres.HashCreateRequest{
+			Value: sanitizedPassword,
+		})
 
 		if err != nil {
 			log.Err("MakeCreateAccountEndpoint: %s", err.Error())
@@ -72,17 +69,15 @@ func MakeCreateAccountEndpoint(svc service.Service) endpoint.Endpoint {
 			}, nil
 		}
 
-		cr := res.(reqres.HashCreateResponse)
-
-		if cr.Err != "" {
-			log.Err("MakeCreateAccountEndpoint: %s", cr.Err)
+		if res.Err != "" {
+			log.Err("MakeCreateAccountEndpoint: %s", res.Err)
 
 			return reqres.CreateAccountResponse{
 				Err: "MakeCreateAccountEndpoint: cannot create an account",
 			}, nil
 		}
 
-		hashedPassword := cr.Hash
+		hashedPassword := res.Hash
 
 		err = svc.CreateAccount(entity.User{
 			Name:                    sanitizedName,
@@ -102,14 +97,10 @@ func MakeCreateAccountEndpoint(svc service.Service) endpoint.Endpoint {
 
 		// Send the email in a separate process.
 		go func() {
-			res, err := downstream.Endpoints().MailerWelcome(
-
-				// Using a separate context because this needs to stay alive
-				// even after the create account API request finishes.
-				context.Background(), reqres.RelayWelcomeMessageRequest{
-					Email: req.Email,
-					Name:  req.Name,
-				})
+			res, err := mtls.MailerWelcome(reqres.RelayWelcomeMessageRequest{
+				Email: req.Email,
+				Name:  req.Name,
+			})
 
 			if err != nil {
 				log.Err(
@@ -120,11 +111,10 @@ func MakeCreateAccountEndpoint(svc service.Service) endpoint.Endpoint {
 				return
 			}
 
-			er := res.(reqres.RelayWelcomeMessageResponse)
-			if er.Err != "" {
+			if res.Err != "" {
 				log.Err(
 					"Problem sending welcome email (%s) (%s)",
-					log.RedactEmail(req.Email), er.Err,
+					log.RedactEmail(req.Email), res.Err,
 				)
 			}
 		}()
