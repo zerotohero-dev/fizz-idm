@@ -31,8 +31,8 @@ func Init(e env.FizzEnv) {
 
 	isDevelopment := e.Deployment.Type == env.Development
 
-	serverAddressCrypto = e.Crypto.MtlsServerAddress
-	serverAddressMailer = e.Mailer.MtlsServerAddress
+	serverAddressCrypto = e.Idm.MtlsServerAddressCrypto
+	serverAddressMailer = e.Idm.MtlsServerAddressMailer
 	spireSocketPath = e.Spire.SocketPath
 	requestTimeout = e.Spire.MtlsTimeout
 
