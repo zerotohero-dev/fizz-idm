@@ -16,27 +16,12 @@ import (
 	"github.com/go-kit/kit/transport/http"
 	"github.com/gorilla/mux"
 	"github.com/zerotohero-dev/fizz-app/pkg/app"
+	urls "github.com/zerotohero-dev/fizz-entity/pkg/endpoint"
 	"github.com/zerotohero-dev/fizz-env/pkg/env"
 	"github.com/zerotohero-dev/fizz-idm/internal/endpoint"
 	"github.com/zerotohero-dev/fizz-idm/internal/service"
 	"github.com/zerotohero-dev/fizz-idm/internal/transport"
 )
-
-var urls = struct {
-	Info           string
-	Login          string
-	SignUp         string
-	CreateAccount  string
-	RemindPassword string
-	ResetPassword  string
-}{
-	Info:           "/v1/info",
-	Login:          "/v1/login",
-	SignUp:         "/v1/signup",
-	CreateAccount:  "/v1/create",
-	RemindPassword: "/v1/remind",
-	ResetPassword:  "/v1/reset",
-}
 
 func InitializeEndpoints(e env.FizzEnv, router *mux.Router) {
 	svc := service.New(e, context.Background())
@@ -50,7 +35,7 @@ func InitializeEndpoints(e env.FizzEnv, router *mux.Router) {
 			app.ContentTypeValidatingMiddleware(transport.DecodeInfoRequest),
 			app.EncodeResponse,
 		),
-		router, "GET", prefix, urls.Info,
+		router, "GET", prefix, urls.Idm.Info,
 	)
 
 	// Authenticates the user.
@@ -60,7 +45,7 @@ func InitializeEndpoints(e env.FizzEnv, router *mux.Router) {
 			app.ContentTypeValidatingMiddleware(transport.DecodeLoginRequest),
 			transport.EncodeLoginResponse(e),
 		),
-		router, "POST", prefix, urls.Login,
+		router, "POST", prefix, urls.Idm.Login,
 	)
 
 	// Sends and email verification email to the user.
@@ -70,7 +55,7 @@ func InitializeEndpoints(e env.FizzEnv, router *mux.Router) {
 			app.ContentTypeValidatingMiddleware(transport.DecodeSignupRequest),
 			app.EncodeResponse,
 		),
-		router, "POST", prefix, urls.SignUp,
+		router, "POST", prefix, urls.Idm.SignUp,
 	)
 
 	// Creates the user’s account (needs email verification token)
@@ -81,7 +66,7 @@ func InitializeEndpoints(e env.FizzEnv, router *mux.Router) {
 				transport.DecodeCreateAccountRequest),
 			app.EncodeResponse,
 		),
-		router, "POST", prefix, urls.CreateAccount,
+		router, "POST", prefix, urls.Idm.CreateAccount,
 	)
 
 	// Sends a “reset password” email to the user.
@@ -92,7 +77,7 @@ func InitializeEndpoints(e env.FizzEnv, router *mux.Router) {
 				transport.DecodeSendPasswordResetTokenRequest),
 			app.EncodeResponse,
 		),
-		router, "POST", prefix, urls.RemindPassword,
+		router, "POST", prefix, urls.Idm.RemindPassword,
 	)
 
 	// Resets the user’s password if the token matches.
@@ -103,6 +88,6 @@ func InitializeEndpoints(e env.FizzEnv, router *mux.Router) {
 				transport.DecodeResetPasswordRequest),
 			app.EncodeResponse,
 		),
-		router, "POST", prefix, urls.ResetPassword,
+		router, "POST", prefix, urls.Idm.ResetPassword,
 	)
 }

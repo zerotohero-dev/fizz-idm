@@ -56,7 +56,7 @@ func deserialize(conn net.Conn, response interface{}) error {
 
 func send(conn net.Conn, payload string) error {
 	if conn == nil {
-		return errors.New("send: Failed to connectCrypto downstream")
+		return errors.New("send: Failed to connect downstream")
 	}
 
 	_, err := fmt.Fprintf(conn, payload+"\n")

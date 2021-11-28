@@ -47,23 +47,22 @@ func createUnverifiedUser(user entity.User) error {
 
 func sendEmailVerificationToken(name, email string, emailVerificationToken string) {
 	log.Info("implement me:", name, email)
-	//go func() {
-	//	res, err := mtls.MailerVerify(reqres.RelayEmailVerificationMessageRequest{
-	//		Email: email,
-	//		Name:  name,
-	//		Token: emailVerificationToken,
-	//	})
-	//
-	//	if err != nil {
-	//		log.Err("Problem sending activation email (%s) (%s)",
-	//			log.RedactEmail(email), err.Error())
-	//	}
-	//
-	//	if res.Err != "" {
-	//		log.Err("Problem sending activation email (%s) (%s)",
-	//			log.RedactEmail(email), res.Err)
-	//	}
-	//}()
+
+	res, err := mtls.MailerVerify(reqres.RelayEmailVerificationMessageRequest{
+		Email: email,
+		Name:  name,
+		Token: emailVerificationToken,
+	})
+
+	if err != nil {
+		log.Err("Problem sending activation email (%s) (%s)",
+			log.RedactEmail(email), err.Error())
+	}
+
+	if res.Err != "" {
+		log.Err("Problem sending activation email (%s) (%s)",
+			log.RedactEmail(email), res.Err)
+	}
 }
 
 func (s service) SignUp(user entity.User) error {
@@ -107,7 +106,7 @@ func (s service) SignUp(user entity.User) error {
 		)
 	}
 
-	sendEmailVerificationToken(user.Name, user.Email, user.EmailVerificationToken)
+	go sendEmailVerificationToken(user.Name, user.Email, user.EmailVerificationToken)
 
 	return nil
 }
