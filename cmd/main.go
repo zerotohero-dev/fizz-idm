@@ -41,6 +41,8 @@ func main() {
 
 	// This is for testing purposes only!
 	go func() {
+		log.Info("Will try to create a token for a demo…")
+
 		// Establish an mTLS connection with the crypto service to get a token.
 		res, err := mtls.CryptoTokenCreate(reqres.TokenCreateRequest{})
 

@@ -68,6 +68,8 @@ func send(conn net.Conn, payload string) error {
 }
 
 func connect(appName, serverAddress string) (net.Conn, context.CancelFunc) {
+	log.Info("connect: (%s) (%s)", appName, serverAddress)
+
 	ctx, cancel := context.WithTimeout(context.Background(), requestTimeout)
 
 	spiffeId := spiffeid.Must("fizzbuzz.pro", "app", appName)
