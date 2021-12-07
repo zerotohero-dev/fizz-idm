@@ -4,28 +4,30 @@ go 1.16
 
 require (
 	github.com/StackExchange/wmi v1.2.1 // indirect
-	github.com/aws/aws-sdk-go v1.40.5 // indirect
-	github.com/go-kit/kit v0.11.0
+	github.com/go-kit/kit v0.12.0
 	github.com/go-logfmt/logfmt v0.5.1 // indirect
+	github.com/go-ole/go-ole v1.2.6 // indirect
 	github.com/go-stack/stack v1.8.1 // indirect
 	github.com/golang/snappy v0.0.4 // indirect
 	github.com/google/uuid v1.3.0 // indirect
 	github.com/gorilla/mux v1.8.0
-	github.com/honeybadger-io/honeybadger-go v0.5.0 // indirect
-	github.com/klauspost/compress v1.13.5 // indirect
 	github.com/pborman/uuid v1.2.1 // indirect
 	github.com/pkg/errors v0.9.1
 	github.com/rs/cors v1.8.0 // indirect
-	github.com/shirou/gopsutil v3.21.8+incompatible // indirect
+	github.com/shirou/gopsutil v3.21.10+incompatible // indirect
+	github.com/spiffe/go-spiffe/v2 v2.0.0-beta.10
 	github.com/youmark/pkcs8 v0.0.0-20201027041543-1326539a0a0a // indirect
-	github.com/zerotohero-dev/fizz-app v0.4.2
-	github.com/zerotohero-dev/fizz-entity v0.5.8
-	github.com/zerotohero-dev/fizz-env v0.3.7
-	github.com/zerotohero-dev/fizz-logging v0.2.0
+	github.com/zerotohero-dev/fizz-app v0.5.2
+	github.com/zerotohero-dev/fizz-entity v0.5.14
+	github.com/zerotohero-dev/fizz-env v0.4.9
+	github.com/zerotohero-dev/fizz-logging v0.3.0
 	github.com/zerotohero-dev/fizz-validation v0.1.2
-	go.mongodb.org/mongo-driver v1.7.2
-	golang.org/x/crypto v0.0.0-20210817164053-32db794688a5 // indirect
-	golang.org/x/sync v0.0.0-20210220032951-036812b2e83c // indirect
-	golang.org/x/sys v0.0.0-20210908233432-aa78b53d3365 // indirect
+	go.mongodb.org/mongo-driver v1.8.0
+	golang.org/x/crypto v0.0.0-20211117183948-ae814b36b871 // indirect
+	golang.org/x/net v0.0.0-20211123203042-d83791d6bcd9 // indirect
+	golang.org/x/sys v0.0.0-20211123173158-ef496fb156ab // indirect
 	golang.org/x/text v0.3.7 // indirect
+	google.golang.org/genproto v0.0.0-20211118181313-81c1377c94b1 // indirect
+	google.golang.org/grpc v1.42.0 // indirect
+	gopkg.in/square/go-jose.v2 v2.6.0 // indirect
 )

@@ -16,6 +16,6 @@ curl --request POST \
   --header 'Content-Type: application/json' \
   --data '{
 	"name": "Mr Potato Head",
-	"email": "potato4@volkan.io"
+	"email": "potato55@volkan.io"
 }'
 
