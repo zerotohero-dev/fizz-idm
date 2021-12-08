@@ -60,5 +60,75 @@ func main() {
 		log.Info("Generated token: %s", res.Token)
 	}()
 
+	go func() {
+		value := "potato"
+		res, err := mtls.CryptoHashCreate(reqres.HashCreateRequest{
+			Value: value,
+		})
+
+		if err != nil {
+			log.Err("Error creating token: %s", err.Error())
+			return
+		}
+
+		if res == nil {
+			log.Err("nil response")
+			return
+		}
+
+		log.Info("Generated hash: %s", res.Hash)
+
+		vr, err := mtls.CryptoHashVerify(reqres.HashVerifyRequest{
+			Value: value,
+			Hash:  res.Hash,
+		})
+
+		if err != nil {
+			log.Err("Error creating token: %s", err.Error())
+			return
+		}
+
+		if vr == nil {
+			log.Err("nil response")
+			return
+		}
+
+		log.Info("verified: %s", vr.Verified)
+	}()
+
+	func() {
+		res, err := mtls.CryptoJwtCreate(reqres.JwtCreateRequest{
+			Email: "me@volkan.io",
+		})
+
+		if err != nil {
+			log.Err("Error creating jwt: %s", err.Error())
+			return
+		}
+
+		if res == nil {
+			log.Err("nil response")
+			return
+		}
+
+		log.Info("verified: %s", res.Token)
+
+		vr, err := mtls.CryptoJwtVerify(reqres.JwtVerifyRequest{
+			Token: res.Token,
+		})
+
+		if err != nil {
+			log.Err("Error creating jwt: %s", err.Error())
+			return
+		}
+
+		if vr == nil {
+			log.Err("nil response")
+			return
+		}
+
+		log.Info("verified: %s %s %s", vr.Email, vr.Expires, vr.Valid)
+	}()
+
 	app.ListenAndServe(e, svcName, appEnv.Port, r)
 }
