@@ -18,38 +18,44 @@ import (
 	"github.com/zerotohero-dev/fizz-entity/pkg/reqres"
 )
 
-func CryptoTokenCreate(request reqres.TokenCreateRequest) (*reqres.TokenCreateResponse, error) {
-	payload := serialize(reqres.MtlsApiRequest{
+func build(request interface{}, m method.Method, e string) string {
+	return serialize(reqres.MtlsApiRequest{
 		Service:  reqres.CryptoService,
-		Endpoint: endpoint.Crypto.SecureToken,
-		Method:   method.Get,
-		Body:     serialize(request),
+		Endpoint: e, Method: m,
+		Body: serialize(request),
 	})
+}
+
+func CryptoTokenCreate(request reqres.TokenCreateRequest) (
+	*reqres.TokenCreateResponse, error,
+) {
+	payload := build(request, method.Get, endpoint.Crypto.SecureToken)
 
 	conn, cancel := connectCrypto()
 	defer disconnect(conn, cancel)()
 
 	err := send(conn, payload)
 	if err != nil {
-		return nil, errors.Wrap(err, "CryptoTokenCreate: Failed to send request")
+		return nil, errors.Wrap(
+			err, "CryptoTokenCreate: Failed to send request",
+		)
 	}
 
 	var tr reqres.TokenCreateResponse
 	err = deserialize(conn, &tr)
 	if err != nil {
-		return nil, errors.Wrap(err, "CryptoTokenCreate: Problem receiving response")
+		return nil, errors.Wrap(
+			err, "CryptoTokenCreate: Problem receiving response",
+		)
 	}
 
 	return &tr, nil
 }
 
-func CryptoHashCreate(request reqres.HashCreateRequest) (*reqres.HashCreateResponse, error) {
-	payload := serialize(reqres.MtlsApiRequest{
-		Service:  reqres.CryptoService,
-		Endpoint: endpoint.Crypto.SecureHash,
-		Method:   method.Post,
-		Body:     serialize(request),
-	})
+func CryptoHashCreate(request reqres.HashCreateRequest) (
+	*reqres.HashCreateResponse, error,
+) {
+	payload := build(request, method.Post, endpoint.Crypto.SecureHash)
 
 	conn, cancel := connectCrypto()
 	defer disconnect(conn, cancel)()
@@ -68,38 +74,36 @@ func CryptoHashCreate(request reqres.HashCreateRequest) (*reqres.HashCreateRespo
 	return &hr, nil
 }
 
-func CryptoHashVerify(request reqres.HashVerifyRequest) (*reqres.HashVerifyResponse, error) {
-	payload := serialize(reqres.MtlsApiRequest{
-		Service:  reqres.CryptoService,
-		Endpoint: endpoint.Crypto.SecureHashVerify,
-		Method:   method.Post,
-		Body:     serialize(request),
-	})
+func CryptoHashVerify(request reqres.HashVerifyRequest) (
+	*reqres.HashVerifyResponse, error,
+) {
+	payload := build(request, method.Post, endpoint.Crypto.SecureHashVerify)
 
 	conn, cancel := connectCrypto()
 	defer disconnect(conn, cancel)()
 
 	err := send(conn, payload)
 	if err != nil {
-		return nil, errors.Wrap(err, "CryptoHashVerify: Failed to send request")
+		return nil, errors.Wrap(
+			err, "CryptoHashVerify: Failed to send request",
+		)
 	}
 
 	var hr reqres.HashVerifyResponse
 	err = deserialize(conn, &hr)
 	if err != nil {
-		return nil, errors.Wrap(err, "CryptoHashVerify: Problem receiving response")
+		return nil, errors.Wrap(
+			err, "CryptoHashVerify: Problem receiving response",
+		)
 	}
 
 	return &hr, nil
 }
 
-func CryptoJwtCreate(request reqres.JwtCreateRequest) (*reqres.JwtCreateResponse, error) {
-	payload := serialize(reqres.MtlsApiRequest{
-		Service:  reqres.CryptoService,
-		Endpoint: endpoint.Crypto.Jwt,
-		Method:   method.Post,
-		Body:     serialize(request),
-	})
+func CryptoJwtCreate(request reqres.JwtCreateRequest) (
+	*reqres.JwtCreateResponse, error,
+) {
+	payload := build(request, method.Post, endpoint.Crypto.Jwt)
 
 	conn, cancel := connectCrypto()
 	defer disconnect(conn, cancel)()
@@ -112,19 +116,18 @@ func CryptoJwtCreate(request reqres.JwtCreateRequest) (*reqres.JwtCreateResponse
 	var jr reqres.JwtCreateResponse
 	err = deserialize(conn, &jr)
 	if err != nil {
-		return nil, errors.Wrap(err, "CryptoJwtCreate: Problem receiving response")
+		return nil, errors.Wrap(
+			err, "CryptoJwtCreate: Problem receiving response",
+		)
 	}
 
 	return &jr, nil
 }
 
-func CryptoJwtVerify(request reqres.JwtVerifyRequest) (*reqres.JwtVerifyResponse, error) {
-	payload := serialize(reqres.MtlsApiRequest{
-		Service:  reqres.CryptoService,
-		Endpoint: endpoint.Crypto.JwtVerify,
-		Method:   method.Post,
-		Body:     serialize(request),
-	})
+func CryptoJwtVerify(request reqres.JwtVerifyRequest) (
+	*reqres.JwtVerifyResponse, error,
+) {
+	payload := build(request, method.Post, endpoint.Crypto.JwtVerify)
 
 	conn, cancel := connectCrypto()
 	defer disconnect(conn, cancel)()
@@ -137,7 +140,9 @@ func CryptoJwtVerify(request reqres.JwtVerifyRequest) (*reqres.JwtVerifyResponse
 	var jr reqres.JwtVerifyResponse
 	err = deserialize(conn, &jr)
 	if err != nil {
-		return nil, errors.Wrap(err, "CryptoJwtVerify: Problem receiving response")
+		return nil, errors.Wrap(
+			err, "CryptoJwtVerify: Problem receiving response",
+		)
 	}
 
 	return &jr, nil
