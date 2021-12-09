@@ -9,4 +9,4 @@
 #   /;`,,/7),)) )) )\,,
 #  (& )`   (,((,((;( ))\,
 
-go build cmd/main.go
+go build -o fizz-idm cmd/config.go cmd/main.go
