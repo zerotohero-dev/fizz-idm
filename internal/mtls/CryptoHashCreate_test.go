@@ -9,25 +9,25 @@
  *  (& )`   (,((,((;( ))\,
  */
 
-package main
+package mtls
 
 import (
 	"github.com/zerotohero-dev/fizz-entity/pkg/reqres"
 	"github.com/zerotohero-dev/fizz-env/pkg/env"
-	"github.com/zerotohero-dev/fizz-idm/internal/mtls"
 	"testing"
 )
 
-func TestCryptoJwtCreate(t *testing.T) {
+func TestCryptoHashCreate(t *testing.T) {
 	e := *env.New()
-	mtls.Init(e)
+	Init(e)
 
-	res, err := mtls.CryptoJwtCreate(reqres.JwtCreateRequest{
-		Email: "me@volkan.io",
+	value := "potato"
+	res, err := CryptoHashCreate(reqres.HashCreateRequest{
+		Value: value,
 	})
 
 	if err != nil {
-		t.Fatal("Error creating jwt:", err.Error())
+		t.Fatal("Error creating token:", err.Error())
 		return
 	}
 
@@ -36,14 +36,15 @@ func TestCryptoJwtCreate(t *testing.T) {
 		return
 	}
 
-	t.Log("Generated jwt:", res.Token)
+	t.Log("Generated hash:", res.Hash)
 
-	vr, err := mtls.CryptoJwtVerify(reqres.JwtVerifyRequest{
-		Token: res.Token,
+	vr, err := CryptoHashVerify(reqres.HashVerifyRequest{
+		Value: value,
+		Hash:  res.Hash,
 	})
 
 	if err != nil {
-		t.Fatal("Error verifying jwt:", err.Error())
+		t.Fatal("Error verifying hash:", err.Error())
 		return
 	}
 
@@ -52,6 +53,6 @@ func TestCryptoJwtCreate(t *testing.T) {
 		return
 	}
 
-	t.Log("verified:", vr.Email, vr.Valid, vr.Expires)
+	t.Log("verified:", vr.Verified)
 	t.Log("Done.")
 }
